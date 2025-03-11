@@ -1,0 +1,111 @@
+name: live_app
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI and Navigation
+  cupertino_icons: ^1.0.6
+  curved_navigation_bar: ^1.0.6
+  smooth_page_indicator: ^1.2.0+3
+  adaptive_dialog: ^2.2.0
+  quickalert: ^1.1.0
+  lottie: ^3.1.3
+  flutter_credit_card: ^4.0.1
+
+  # Firebase
+  firebase_core: ^2.24.2
+  cloud_firestore: ^4.14.0
+  firebase_storage: ^11.6.0
+  firebase_messaging: ^14.7.10
+  firebase_auth: ^4.16.0
+  firebase_app_check: ^0.2.2+7
+
+  # Authentication
+  google_sign_in: ^6.2.1
+  twitter_login: ^4.0.0
+
+  # State Management
+  get: ^4.7.2
+
+  # Storage and Preferences
+  shared_preferences: ^2.3.3
+
+  # Live Streaming
+  zego_uikit_prebuilt_live_streaming: ^3.13.12
+  zego_zim: ^2.17.1+1
+  zego_express_engine: ^3.19.1
+
+  # Video and Notifications
+  stream_video: ^0.5.1
+  stream_video_flutter: ^0.5.1
+  stream_video_push_notification: ^0.5.1
+
+  # Image Picker
+  image_picker: ^1.1.2
+
+  # OTP and Fonts
+  flutter_otp_text_field: ^1.2.0
+  font_awesome_flutter: ^10.7.0
+
+  # UUID
+  uuid: ^4.5.1
+
+  # PayPal Integration (Replaced flutter_paypal_checkout with paypal_payment)
+  flutter_paypal: ^0.2.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/error_image.jpg
+    - assets/onboarding/onb1.PNG
+    - assets/onboarding/onb2.PNG
+    - assets/onboarding/onb3.PNG
+    - assets/login/loginpic.jpg
+    - assets/login/emailverif.jpg
+    - assets/login/google_PNG19635.png
+    - assets/home/door.jpg
+    - assets/paymentCardPictures/card_bg.png
+    - assets/paymentCardPictures/bg-dark.png
+    - assets/paymentCardPictures/bg-light.png
+    - assets/paymentCardPictures/mastercard.png
+    - assets/images/stream-offline.jpg
+    - assets/images/stream.json
+    - assets/images/nolive.json
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
