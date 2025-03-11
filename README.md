@@ -1,4 +1,4 @@
-# live_app
+# shop_online_app
 
 A new Flutter project.
 
