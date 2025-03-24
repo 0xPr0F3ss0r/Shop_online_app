@@ -4,120 +4,169 @@ import 'package:live_app/controller/emailVerificationController.dart';
 import 'package:live_app/controller/singupcontroller.dart';
 
 class SendEmailVerification extends StatelessWidget {
-  final SendEmailVerificationController controller =
-      Get.put(SendEmailVerificationController());
+  final SendEmailVerificationController controller = Get.put(SendEmailVerificationController());
   final MySignupController signupController = Get.put(MySignupController());
   
   @override
   Widget build(BuildContext context) {
+    String email = signupController.email.text;
     return Scaffold(
       body: Stack(
         children: [
+          // Background with gradient overlay
           Container(
             decoration: const BoxDecoration(
-              color: Color.fromARGB(245, 82, 82, 84),
               image: DecorationImage(
                 image: AssetImage("assets/login/emailverif.jpg"),
                 fit: BoxFit.cover,
               ),
+            
             ),
           ),
-          const Positioned(
-            top: 100,
-            right: 5,
-                child: Center(
-                  child: Text(
-                    "confirme Your Email now",
-                    textAlign: TextAlign.center,
+          
+          // Content
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Email Icon Animation
+                  const Icon(
+                    Icons.mark_email_unread_outlined,
+                    size: 100,
+                    color: Colors.cyanAccent,
+                  ),
+                  const SizedBox(height: 30),
+                  
+                  // Title
+                  const Text(
+                    "Confirm Your Email",
                     style: TextStyle(
                       color: Colors.cyanAccent,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
+                      letterSpacing: 1.2,
                     ),
                   ),
-                ),
-              
-            
-          ),
-          Positioned(
-            top: 320,
-            right: 4,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Container(
-                  height: 150,
-                  width: 349,
-                  decoration: BoxDecoration(
-                      color: Colors.black45,
+                  const SizedBox(height: 20),
+                  
+                  // Instruction Card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(25),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.blueAccent,
-                        width: 2
-                      )
+                        color: Colors.cyanAccent.withOpacity(0.5),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.cyan.withOpacity(0.2),
+                          blurRadius: 20,
+                          spreadRadius: 3,
+                        ),
+                      ],
                     ),
-                  child: const Center(
-                    child: Text(
-                      "please cheak your email for\n confirmation mail,Click link in email \nto verification your account",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                    child: Column(
+                      children: [
+                         Text(
+                          "We've sent a confirmation email to:",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          email,
+                          style: const TextStyle(
+                            color: Colors.cyanAccent,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          "Please check your inbox and click the verification link to activate your account.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  
+                  // Check Verification Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: () => controller.checkEmailVerified(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.cyan[800],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5,
+                      ),
+                      child: const Text(
+                        "CHECK VERIFICATION STATUS",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  const SizedBox(height: 30),
+                  
+                  // Resend Email Section
+                  Column(
+                    children: [
+                      const Text(
+                        "Didn't receive the email?",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          signupController.sendemailverification();
+                          Get.snackbar(
+                            "Email Sent",
+                            "Verification email has been resent",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        child: const Text(
+                          "RESEND VERIFICATION EMAIL",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.cyanAccent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-          Positioned(
-            top: 520,
-            left: 50,
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 38, 67, 213),
-                  borderRadius: BorderRadius.circular(20)
-                ),
-                child: MaterialButton(onPressed: () {
-                  controller.checkEmailVerified(context);
-                },child:Text("CHECK EMAIL VERIFIED",style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
-                  ),),),
-              )
-            )),
-          const Positioned(
-            top: 620,
-            left: 50,
-            child: Center(
-              child: Text("Didn't Get confirmation email?",textAlign: TextAlign.center,style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20
-                ),),
-            )),
-             Positioned(
-            top: 670,
-            left: 20,
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 170, 170, 78),
-                  borderRadius: BorderRadius.circular(20)
-                ),
-                child: MaterialButton(onPressed: () {
-                  signupController.sendemailverification();
-                },child:Text("RESEND EMAIL CONFIRMATION",style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
-                  ),),),
-              )
-            )),
         ],
       ),
     );

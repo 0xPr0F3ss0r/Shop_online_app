@@ -7,41 +7,36 @@ class FirstPage extends GetView<onboardingContollerImp> {
 
   @override
   Widget build(BuildContext context) {
+    String text = "Seamless shopping experience from\n you favorite brands;access special\n       discounts and early sales";
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
-          color:Color.fromARGB(255, 35, 94, 220),
+        width: double.infinity,
+        height:double.infinity,
+          color:Colors.white,
           child:
-              Stack(
-                children:[
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(245, 82, 82, 84),
-                      image: DecorationImage(
-                        image: AssetImage("assets/onboarding/onb1.PNG"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                bottom: 120, // Position the button 50 pixels from the bottom
-                left: 0,
-                right: 5,
-                child: Center(
-                  child: OutlinedButton(
-                    style: ButtonStyle(minimumSize: WidgetStatePropertyAll(Size(200,50))),
-                    onPressed: () {
-                      controller.next();
-                      // Add your button action here
-                    },
-                    child: Text('Next',style: TextStyle(fontSize: 40,color:Colors.deepPurple),),
-                  ),
-                ),
-              ),
-                ] 
-              ),
-              
-              
-            
+          Column(
+            children: [
+              Column(
+                children: [
+                   ClipRRect(borderRadius: BorderRadius.circular(5),
+                   child: const Image(image: AssetImage("assets/onboarding/onboarding1.jpg")
+                   )
+                   ),
+                   const SizedBox(height: 40,),
+                   const Text("Shop Effortlessly",style:TextStyle(color:Colors.black,fontWeight: FontWeight.bold,fontSize:30)),
+                   const SizedBox(height: 10,),
+                   Align(
+                    alignment: Alignment.center,
+                     child: Padding(
+                       padding: const EdgeInsets.only(left: 20,right:10),
+                       child: Text(text,),
+                     ),
+                   )
+                   ]
+                   )
+            ],
+          ) 
         ),
       
     );

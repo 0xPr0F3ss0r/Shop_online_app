@@ -84,6 +84,9 @@ flutter:
     - assets/images/stream-offline.jpg
     - assets/images/stream.json
     - assets/images/nolive.json
+    - assets/onboarding/onboarding1.jpg
+    - assets/onboarding/onboarding2.jpg
+    - assets/onboarding/onboarding3.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

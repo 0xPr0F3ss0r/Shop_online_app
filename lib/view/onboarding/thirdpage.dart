@@ -7,41 +7,36 @@ class ThirdPage extends GetView<onboardingContollerImp> {
 
   @override
   Widget build(BuildContext context) {
+    String text = "Get the latest trends and exclusive\ncollections, build and organize your\n                 perfect closet";
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
-          color:Color.fromARGB(255, 35, 94, 220),
+        width: double.infinity,
+        height:double.infinity,
+          color:Colors.white,
           child:
-              Stack(
-                children:[
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(245, 82, 82, 84),
-                      image: DecorationImage(
-                        image: AssetImage("assets/onboarding/onb3.PNG"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                bottom: 120, // Position the button 50 pixels from the bottom
-                left: 0,
-                right: 5,
-                child: Center(
-                  child: OutlinedButton(
-                    style: ButtonStyle(minimumSize: WidgetStatePropertyAll(Size(200,50))),
-                    onPressed: () {
-                      controller.next();
-                      // Add your button action here
-                    },
-                    child: Text('Get Started',style: TextStyle(fontSize: 40,color:Colors.deepPurple),),
-                  ),
-                ),
-              ),
-                ] 
-              ),
-              
-              
-            
+          Column(
+            children: [
+              Column(
+                children: [
+                   ClipRRect(borderRadius: BorderRadius.circular(5),
+                   child: Image(image: AssetImage("assets/onboarding/onboarding3.jpg")
+                   )
+                   ),
+                   SizedBox(height: 40,),
+                   Text("Stay Trendy And slay",style:TextStyle(color:Colors.black,fontWeight: FontWeight.bold,fontSize:30)),
+                   SizedBox(height: 10,),
+                   Align(
+                    alignment: Alignment.center,
+                     child: Padding(
+                       padding: const EdgeInsets.only(left: 20,right:10),
+                       child: Text(text,),
+                     ),
+                   )
+                   ]
+                   )
+            ],
+          )      
         ),
       
     );
