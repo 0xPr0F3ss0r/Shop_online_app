@@ -28,7 +28,6 @@ void main() async {
     }
   }
 
-  // String? token = await FirebaseMessaging.instance.getToken();
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
