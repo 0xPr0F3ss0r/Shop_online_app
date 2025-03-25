@@ -20,7 +20,7 @@ class onboardingContollerImp extends Onboardingconroller{
       Get.offAllNamed(AppRoute.Login);
     }else{
       if(pageController.hasClients){
-        pageController.animateToPage(curruentPage, duration: const Duration(milliseconds: 900), curve: Curves.easeInOut);
+        pageController.animateToPage(curruentPage, duration: const Duration(milliseconds: 900), curve: Curves.fastOutSlowIn);
       }
       
     }

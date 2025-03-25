@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:live_app/controller/paypalController.dart';
 import 'package:live_app/controller/productinfoController.dart';
 import 'package:live_app/controller/profilepagecontroller.dart';
 import 'package:live_app/view/payment/paypale.dart';
@@ -15,27 +14,15 @@ class Productinfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Productinfocontroller controller = Get.put(Productinfocontroller());
-    Paypalcontroller paypalcontroller = Get.put(Paypalcontroller());
     ProfilePageController profileController = Get.put(ProfilePageController());
     final Map<String, dynamic>? productinfo = Get.arguments;
     String profileImage = productinfo!['profile image'] ??
         'https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg';
     String productImage = productinfo['productImage'] ??
         "https://www.pinterest.com/pin/19281104650773307/";
-    String profileName = productinfo['profile name'] ?? 'Unknown';
-    var followers = int.tryParse(productinfo['followers']) ?? '0';
     String email = productinfo['email'].toString().isEmpty
         ? 'no email'
         : productinfo['email'];
-    String phone = productinfo['phone'].toString().isEmpty
-        ? 'no phone'
-        : productinfo['phone'];
-    String website = productinfo['website'].toString().isEmpty
-        ? 'no website'
-        : productinfo['website'];
-    String location = productinfo['location'].toString().isEmpty
-        ? 'no location'
-        : productinfo['location'];
     String productBrand = productinfo['productsBrand'].toString().isEmpty
         ? 'no product brand'
         : productinfo['productsBrand'];
@@ -48,23 +35,8 @@ class Productinfo extends StatelessWidget {
     String productcolor = productinfo['productColor'].toString().isEmpty
         ? 'no product color'
         : productinfo['productColor'];
-    String productType = productinfo['productType'].toString().isEmpty
-        ? 'no product type'
-        : productinfo['productType'];
-    List color = productcolor.split(",").toList();
     List size = productSize.split(",").toList();
-    List<Map<String, dynamic>> AllProducts = productinfo['all products'] ?? '';
-    Map<String, dynamic> UserWithProducts = {
-      "email": email,
-      "profile image": profileImage,
-      "profile name": profileName,
-      "active since": '',
-      "followers": followers,
-      'phone': phone,
-      "website": website,
-      "location": location,
-      "all products": AllProducts,
-    };
+    
 
     return Scaffold(
       appBar: AppBar(

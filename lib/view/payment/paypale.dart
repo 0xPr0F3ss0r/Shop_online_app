@@ -27,7 +27,6 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
-    Map order ={};
     Paypalcontroller controller = Get.put(Paypalcontroller());
     return UsePaypal(
         sandboxMode: true,
