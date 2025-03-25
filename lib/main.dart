@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/controller/onboardingcontroller.dart';
+import 'package:live_app/core/NavigationBar/NavigationBar.dart';
 import 'package:live_app/core/services/services.dart';
 import 'package:live_app/route.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:live_app/view/onboarding/CustomSlider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Check if Firebase is already initialized

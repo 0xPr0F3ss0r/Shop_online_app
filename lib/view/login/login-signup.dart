@@ -7,7 +7,7 @@ import 'package:live_app/functions/ontapfunction.dart';
 import 'package:live_app/view/login/reset-password.dart';
 import 'package:live_app/view/widget/TextFormField.dart';
 import 'package:live_app/view/widget/button.dart';
-
+import 'package:animate_gradient/animate_gradient.dart';
 // ignore: must_be_immutable
 class LoginPage extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
@@ -22,12 +22,19 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(245, 82, 82, 84),
-              image: DecorationImage(
-                image: AssetImage("assets/login/loginpic.jpg"),
-                fit: BoxFit.cover,
+          TweenAnimationBuilder(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: Duration(seconds: 3),
+            builder: (context, value, child) => Opacity(
+              opacity: value,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(245, 82, 82, 84),
+                  image: DecorationImage(
+                    image: AssetImage("assets/login/loginpic.jpg"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
@@ -59,7 +66,7 @@ class LoginPage extends StatelessWidget {
                         height: 540,
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: Colors.black.withOpacity(0.8),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Column(
@@ -68,9 +75,10 @@ class LoginPage extends StatelessWidget {
                             GetBuilder<YourController>(
                               builder: (controller) {
                                 return BottomNavigationBar(
+                                  unselectedItemColor: Colors.white,
+                                  backgroundColor: Colors.transparent,
                                   items: const <BottomNavigationBarItem>[
                                     BottomNavigationBarItem(
-                                      backgroundColor: Colors.blueAccent,
                                       icon: Icon(Icons.login),
                                       label: 'Login',
                                     ),
@@ -80,7 +88,7 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   ],
                                   currentIndex: cont.selectedIndex,
-                                  selectedItemColor: Colors.amber[800],
+                                   selectedItemColor: Colors.cyanAccent,
                                   onTap: cont.onItemTapped,
                                 );
                               },
@@ -100,6 +108,7 @@ class LoginPage extends StatelessWidget {
                                               validator: (val) => validate(
                                                   val!, 7, 40, "email"),
                                               prefixIcon: Icons.email_outlined,
+                                              hintcolor: Colors.cyanAccent,
                                               hint: "Email*",
                                               controller: logincontroller.email,
                                               Prefixiconbutton: false,
@@ -111,6 +120,7 @@ class LoginPage extends StatelessWidget {
                                                 validator: (val) => validate(
                                                     val!, 7, 20, "password"),
                                                 prefixIcon: Icons.lock_outline,
+                                                hintcolor: Colors.cyanAccent,
                                                 hint: "Password*",
                                                 controller:
                                                     logincontroller.password,
@@ -119,8 +129,15 @@ class LoginPage extends StatelessWidget {
                                               ),
                                             ),
                                             const SizedBox(height: 10),
-
                                             Button(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.cyan[800]!,
+                                                  Colors.blue[800]!
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
                                               onPressed: () {
                                                 if (formKey.currentState
                                                         ?.validate() ??
@@ -140,146 +157,124 @@ class LoginPage extends StatelessWidget {
                                                     Get.to(ResetPassword());
                                                   },
                                                   child: const Text(
-                                                      "Reset Password?")),
+                                                    "Forgot Password?",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.cyanAccent),
+                                                  )),
                                             ),
-
                                             const Center(
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  // First Divider
                                                   Expanded(
                                                     child: Padding(
                                                       padding: EdgeInsets.only(
-                                                          right:
-                                                              10), // Adjust spacing before the text
+                                                          right: 10),
                                                       child: Divider(
                                                         color: Colors.grey,
-                                                        height:
-                                                            50, // Height of the divider
-                                                        indent:
-                                                            120, // Space before the start of the divider
-                                                        endIndent:
-                                                            5, // Space after the end of the divider
-                                                        thickness:
-                                                            2, // Thickness of the divider
+                                                        height: 50,
+                                                        indent: 120,
+                                                        endIndent: 5,
+                                                        thickness: 2,
                                                       ),
                                                     ),
                                                   ),
-                                                  // Text in the middle
+
                                                   Text(
                                                     "Or",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize:
-                                                            16), // Adjust fontSize as needed
+                                                        fontSize: 16),
                                                   ),
                                                   // Second Divider
                                                   Expanded(
                                                     child: Padding(
                                                       padding: EdgeInsets.only(
-                                                          left:
-                                                              10), // Adjust spacing after the text
+                                                          left: 10),
                                                       child: Divider(
                                                         color: Colors.grey,
-                                                        height:
-                                                            50, // Height of the divider
-                                                        indent:
-                                                            5, // Space before the start of the divider
-                                                        endIndent:
-                                                            120, // Space after the end of the divider
-                                                        thickness:
-                                                            2, // Thickness of the divider
+                                                        height: 50,
+                                                        indent: 5,
+                                                        endIndent: 120,
+                                                        thickness: 2,
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            //const SizedBox(height:5),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Container(
-                                                  width: 320,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    border: Border.all(
-                                                        color: Colors.white,
-                                                        width: 2),
-                                                  ),
-                                                  child: Center(
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Image.asset(
-                                                          'assets/login/google_PNG19635.png', // Path to the image
-                                                          height: 25,
-                                                          width:
-                                                              25, // Adjusted to make it square for better appearance
-                                                          fit: BoxFit.cover,
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  child: AnimateGradient(
+                                                    primaryColors:  [
+                                                      Colors.white,
+                                                      Colors.blue.shade100
+                                                    ],
+                                                    secondaryColors: [
+                                                      Colors.red.shade400,
+                                                      Colors.deepPurple.shade800,
+                                                    ],
+                                                    child: Container(
+                                                      width: 320,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        border: Border.all(
+                                                          
+                                                          width: 1,
                                                         ),
-                                                        const SizedBox(
-                                                            width:
-                                                                8), // Added spacing between icon and text
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            logincontroller
-                                                                .Ongooglelogin();
-                                                            // Add your Google sign-in logic here
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.black.withOpacity(0.1),
+                                                            blurRadius: 4,
+                                                            offset: const Offset(0, 2),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Material(
+                                                        color: Colors.transparent,
+                                                        child: InkWell(
+                                                          borderRadius: BorderRadius.circular(20),
+                                                          onTap: () {
+                                                            logincontroller.Ongooglelogin();
                                                           },
-                                                          child: const Text(
-                                                            "Google",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,fontStyle: FontStyle.italic), // Ensures text color matches the theme
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.symmetric(vertical: 12),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Image.asset(
+                                                                  'assets/login/google_PNG19635.png',
+                                                                  height: 25,
+                                                                  width: 25,
+                                                                  fit: BoxFit.cover,
+                                                                ),
+                                                                const SizedBox(width: 12),
+                                                                Text(
+                                                                  "Continue with Google",
+                                                                  style: TextStyle(
+                                                                    color: Colors.grey[800],
+                                                                    fontWeight: FontWeight.w500,
+                                                                    fontSize: 16,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
-                                                      ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                // const SizedBox(width: 10),
-                                                // Container(
-                                                //   width: 150,
-                                                //   decoration: BoxDecoration(
-                                                //     borderRadius:
-                                                //         BorderRadius.circular(
-                                                //             20),
-                                                //     border: Border.all(
-                                                //         color: Colors.white,
-                                                //         width: 2),
-                                                //   ),
-                                                //   child: const Center(
-                                                //     child: Row(
-                                                //       mainAxisAlignment:
-                                                //           MainAxisAlignment
-                                                //               .center,
-                                                //       children: [
-                                                //         Icon(
-                                                //           Icons.facebook,
-                                                //           color: Colors.white,
-                                                //           size:
-                                                //               25, // Adjust size if needed
-                                                //         ),
-                                                //         SizedBox(
-                                                //             width:
-                                                //                 8), // Added spacing between icon and text
-                                                //       ],
-                                                //     ),
-                                                //   ),
-                                                // ),
+                                                )
                                               ],
                                             ),
-
                                             const SizedBox(height: 10),
                                           ],
                                         ),
@@ -294,6 +289,7 @@ class LoginPage extends StatelessWidget {
                                               controller:
                                                   Signupcontroller.firstName,
                                               prefixIcon: Icons.person,
+                                              hintcolor: Colors.cyanAccent,
                                               hint: "First Name*",
                                               validator: (val) => validate(
                                                   val!, 7, 20, "username"),
@@ -307,6 +303,7 @@ class LoginPage extends StatelessWidget {
                                               controller:
                                                   Signupcontroller.secondName,
                                               prefixIcon: Icons.person_outline,
+                                              hintcolor: Colors.cyanAccent,
                                               hint: "Second Name*",
                                               validator: (val) => validate(
                                                   val!, 7, 20, "username"),
@@ -320,6 +317,7 @@ class LoginPage extends StatelessWidget {
                                               controller:
                                                   Signupcontroller.email,
                                               prefixIcon: Icons.email_outlined,
+                                              hintcolor: Colors.cyanAccent,
                                               hint: "Email*",
                                               validator: (val) => validate(
                                                   val!, 7, 40, "email"),
@@ -333,6 +331,7 @@ class LoginPage extends StatelessWidget {
                                               controller:
                                                   Signupcontroller.password,
                                               prefixIcon: Icons.lock_outline,
+                                              hintcolor: Colors.cyanAccent,
                                               hint: "Password*",
                                               validator: (val) => validate(
                                                   val!, 7, 20, "password"),
@@ -343,6 +342,16 @@ class LoginPage extends StatelessWidget {
                                               height: 7,
                                             ),
                                             Button(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.cyan[
+                                                        800]!, // Vibrant cyan (#0097A7)
+                                                    Colors.blue[
+                                                        800]! // Deep blue (#1565C0)
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
                                                 onPressed: () {
                                                   if (formKey.currentState
                                                           ?.validate() ??

@@ -60,6 +60,8 @@ dependencies:
 
   # PayPal Integration (Replaced flutter_paypal_checkout with paypal_payment)
   flutter_paypal: ^0.2.1
+  animate_gradient: ^0.0.3
+  animated_text_kit: ^4.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

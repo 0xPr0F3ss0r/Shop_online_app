@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:live_app/controller/productinfoController.dart';
 import 'package:live_app/controller/profilepagecontroller.dart';
@@ -36,7 +35,6 @@ class Productinfo extends StatelessWidget {
         ? 'no product color'
         : productinfo['productColor'];
     List size = productSize.split(",").toList();
-    
 
     return Scaffold(
       appBar: AppBar(
@@ -489,7 +487,6 @@ class Productinfo extends StatelessWidget {
                                                                                         child: MaterialButton(
                                                                                           onPressed: () {
                                                                                             controller.Onsave();
-                                                                                          
                                                                                           },
                                                                                           child: const Text(
                                                                                             "Save",
@@ -544,14 +541,17 @@ class Productinfo extends StatelessWidget {
                                                                     productname:
                                                                         productBrand,
                                                                     productcolor:
-                                                                      productcolor,
+                                                                        productcolor,
                                                                     productimage:
                                                                         productImage,
                                                                     email:
                                                                         email,
-                                                                    profileImage:
-                                                                        profileController.Image??profileController.avatarDefault,
-                                                                        productsize: productSize,
+                                                                    profileImage: profileController
+                                                                            .Image ??
+                                                                        profileController
+                                                                            .avatarDefault,
+                                                                    productsize:
+                                                                        productSize,
                                                                   ),
                                                                 ),
                                                               );
@@ -594,18 +594,27 @@ class Productinfo extends StatelessWidget {
                               ),
                             ));
                   },
-                  child: Container(
-                    width: 250,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.blueAccent)),
-                    child: const Center(
-                        child: Text(
-                      "Add to cart",
-                      style: TextStyle(color: Colors.white),
-                    )),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: AnimateGradient(
+                      primaryColors: [Colors.white, Colors.blue],
+                      secondaryColors: [
+                        Colors.red.shade200,
+                        Colors.deepPurple.shade800,
+                      ],
+                      child: Container(
+                        width: 250,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Center(
+                            child: Text(
+                          "Add to cart",
+                          style: TextStyle(color: Colors.white),
+                        )),
+                      ),
+                    ),
                   ))
             ],
           ),
