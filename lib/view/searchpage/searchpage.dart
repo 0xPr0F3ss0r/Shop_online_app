@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/controller/searchpagecontroller.dart';

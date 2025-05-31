@@ -89,7 +89,7 @@ class HomeController extends GetxController {
         String Avatar = doc['avatar'] ?? '';
         List<Map<String, dynamic>> Products = [];
         doc.data().forEach((key, value) {
-          if (key.startsWith("product of user") &&
+          if (key.startsWith("product of user ") &&
               value is Map<String, dynamic>) {
             Products.add({
               "productImage": value["productImage"] ?? "",
@@ -142,14 +142,19 @@ class HomeController extends GetxController {
         // Extract all products dynamically
         List<Map<String, dynamic>> products = [];
         userData.forEach((key, value) {
-          if (key.startsWith("product of user") &&
+          if (key.startsWith("product of user ") &&
               value is Map<String, dynamic>) {
-            products.add({
-              "productImage": value["productImage"] ?? "",
-              "productBrand": value["productBrand"] ?? "",
-              "productType": value["productType"] ?? "",
-              "productBrandSize": value["productBrandSize"] ?? "",
-              "productPrice": value["productPrice"] ?? "",
+            Map<String, dynamic> myvalue = value as Map<String, dynamic>;
+            myvalue.forEach((key_product, value_product) {
+              products.add({
+                "productImage": value_product["productImage"] ?? "",
+                "productBrand": value_product["productBrand"] ?? "",
+                "productType": value_product["productType"] ?? "",
+                "productBrandSize": value_product["productBrandSize"] ?? "",
+                "productPrice": value_product["productPrice"] ?? "",
+                "productColor": value_product["productBrandColor"] ?? "",
+                "productID": key_product,
+              });
             });
           }
         });

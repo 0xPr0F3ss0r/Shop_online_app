@@ -58,7 +58,6 @@ class ProfilePageController extends GetxController {
     await fetchUserData(); // Fetch user data when the controller is initialized
     await fetchUserProducts();
     isLoding = false;
-    //fetchProductDetails();
   }
 
   void onclear() {
@@ -316,15 +315,7 @@ class ProfilePageController extends GetxController {
       }
 
       Image = downloadUrl; // Assign the download URL to selectedImage
-      await updateUserAvatarInFirestore();
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: "Image uploaded successfully!",
-        title: 'Success',
-        autoCloseDuration: const Duration(seconds: 5),
-        showConfirmBtn: false,
-      );
+      await updateUserAvatarInFirestore(context);
     } catch (e) {
       Get.snackbar("Error", "Error uploading image ,please try again!",
           colorText: Colors.red);
@@ -343,21 +334,13 @@ class ProfilePageController extends GetxController {
       TaskSnapshot snapshot = await storageRef.putFile(File(productImage!));
       downloadUrl = await snapshot.ref.getDownloadURL();
       productImage = downloadUrl;
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: "Product Image uploaded successfully!",
-        title: 'Success',
-        autoCloseDuration: const Duration(seconds: 5),
-        showConfirmBtn: false,
-      );
     } catch (e) {
       Get.snackbar("Error", "Error uploading image ,please try again!",
           colorText: Colors.red);
     }
   }
 
-  Future<void> updateUserAvatarInFirestore() async {
+  Future<void> updateUserAvatarInFirestore(BuildContext context) async {
     QuerySnapshot querySnapshot = await _firestore
         .collection("users")
         .where("Email", isEqualTo: emailText)
@@ -367,10 +350,15 @@ class ProfilePageController extends GetxController {
       String UID = user!.uid;
 
       // Update the user's document in Firestore with the new avatar URL
-      await _firestore
-          .collection('users')
-          .doc(UID)
-          .update({'avatar': Image}); // Save download URL to Firestore
+      await _firestore.collection('users').doc(UID).update({'avatar': Image});
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: "Image uploaded successfully!",
+        title: 'Success',
+        autoCloseDuration: const Duration(seconds: 5),
+        showConfirmBtn: false,
+      ); // Save download URL to Firestore
     } else {
       Get.snackbar("Error", "No information found for this email.",
           snackPosition: SnackPosition.TOP);

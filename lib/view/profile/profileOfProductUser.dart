@@ -309,7 +309,11 @@ class profileOfProductUser extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
                                     width: 300,
-                                    products[index]['productImage']),
+                                    products[index]['productImage']
+                                            .toString()
+                                            .isEmpty
+                                        ? "https://i.pinimg.com/736x/de/3f/ec/de3fecf5e76cad3e5e0ab6163e49d5bd.jpg"
+                                        : products[index]['productImage']),
                               ),
                             ],
                           ),

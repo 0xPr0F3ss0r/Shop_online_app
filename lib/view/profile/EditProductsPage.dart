@@ -171,7 +171,8 @@ class UpdateProducts extends StatelessWidget {
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     controller.pickImage(
-                                                        ImageSource.gallery);
+                                                        ImageSource.gallery,
+                                                        context);
                                                   },
                                                   child: const Text(
                                                       "From Pictures"),
@@ -180,7 +181,8 @@ class UpdateProducts extends StatelessWidget {
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     controller.pickImage(
-                                                        ImageSource.camera);
+                                                        ImageSource.camera,
+                                                        context);
                                                   },
                                                   child:
                                                       const Text("From Camera"),
@@ -240,7 +242,8 @@ class UpdateProducts extends StatelessWidget {
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     controller.pickImage(
-                                                        ImageSource.gallery);
+                                                        ImageSource.gallery,
+                                                        context);
                                                   },
                                                   child: const Text(
                                                       "From Pictures"),
@@ -249,7 +252,8 @@ class UpdateProducts extends StatelessWidget {
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     controller.pickImage(
-                                                        ImageSource.camera);
+                                                        ImageSource.camera,
+                                                        context);
                                                   },
                                                   child:
                                                       const Text("From Camera"),

@@ -49,7 +49,7 @@ class Productinfocontroller extends GetxController {
     Get.to(profileOfProductUser(), arguments: UserWithProduct);
   }
 
-  Future<Map<String, dynamic>?> fetchUserWithProducts(String? email) async {
+  Future<Map<String, dynamic>> fetchUserWithProducts(String? email) async {
     try {
       QuerySnapshot<Map<String, dynamic>> UserData = await _firestore
           .collection("users")
@@ -68,41 +68,44 @@ class Productinfocontroller extends GetxController {
         String Avatar = doc['avatar'] ?? '';
         List<Map<String, dynamic>> Products = [];
         doc.data().forEach((key, value) {
-          if (key.startsWith("product of user") &&
-              value is Map<String, dynamic>) {
-            Products.add({
-              "productImage": value["productImage"] ?? "",
-              "productBrand": value["productBrand"] ?? "",
-              "productType": value["productType"] ?? "",
-              "productBrandSize": value["productBrandSize"] ?? "",
-              "productPrice": value["productPrice"] ?? "",
+          if (key.startsWith("product_of_user ")) {
+            Map<String, dynamic> myvalue = value as Map<String, dynamic>;
+            myvalue.forEach((key_product, value_product) {
+              Products.add({
+                "productImage": value_product["productImage"] ?? "",
+                "productBrand": value_product["productBrand"] ?? "",
+                "productType": value_product["productType"] ?? "",
+                "productBrandSize": value_product["productBrandSize"] ?? "",
+                "productPrice": value_product["productPrice"] ?? "",
+                "productColor": value_product["productBrandColor"] ?? "",
+                "productID": key_product,
+              });
             });
+            UserWithProduct.addAll({
+              "userName": USERNAME,
+              "email": email,
+              "followers": followers,
+              "phone": PHone,
+              "website": Website,
+              "location": Location,
+              "firstname": Firstname,
+              "secondname": Lastname,
+              "avatar": Avatar,
+              "all products": Products,
+            });
+            update();
+          } else {
+            Get.snackbar(
+                "eror", "problem occurred with this user , please try again",
+                colorText: Colors.red);
           }
         });
-        UserWithProduct.addAll({
-          "userName": USERNAME,
-          "email": email,
-          "followers": followers,
-          "phone": PHone,
-          "website": Website,
-          "location": Location,
-          "firstname": Firstname,
-          "secondname": Lastname,
-          "avatar": Avatar,
-          "all products": Products,
-        });
-        update();
-        return UserWithProduct;
-      } else {
-        Get.snackbar(
-            "eror", "problem occurred with this user , please try again",
-            colorText: Colors.red);
       }
+
+      return UserWithProduct;
     } catch (e) {
       Get.snackbar("eror", "try again later", colorText: Colors.red);
-      ;
       return {};
     }
-    return null;
   }
 }

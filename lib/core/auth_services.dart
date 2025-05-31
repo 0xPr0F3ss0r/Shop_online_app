@@ -93,7 +93,6 @@ class AuthService extends GetxController {
       }
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -102,9 +101,9 @@ class AuthService extends GetxController {
       Get.back(); // Dismiss loading indicator
       email = googleUser.email;
       name = googleUser.displayName;
-
       // Split the full name into first and last names
       if (name != null) {
+        print("start login9");
         List<String> nameParts = name!.split(' ');
         FirstName = nameParts.isNotEmpty ? nameParts[0] : '';
         SecondName = nameParts.length > 1
@@ -112,6 +111,7 @@ class AuthService extends GetxController {
             : ''; // Join remaining parts as last name
         //uid = FirebaseAuth.instance.currentUser!.uid;
       }
+      print("start login10");
       final snapshot = await FirebaseFirestore.instance
           .collection("users")
           .where("Email", isEqualTo: email)

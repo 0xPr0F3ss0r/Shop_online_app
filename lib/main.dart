@@ -25,15 +25,12 @@ void main() async {
     if (Platform.isAndroid) {
       try {
         await Firebase.initializeApp(
-          options: FirebaseOptions(
-              apiKey: dotenv.env['API_KEY'] ?? 'default_key',
-              appId: dotenv.env['APP_ID'] ?? 'default_appid',
-              messagingSenderId: dotenv.env['MESSAGING_SENDER_ID'] ??
-                  'default_messagingsenderid',
-              projectId: dotenv.env['PROJECT_ID'] ?? 'default_projectid',
-              storageBucket:
-                  dotenv.env['STORAGE_BUCKET'] ?? 'default_storagebucket'),
-        );
+            options: FirebaseOptions(
+                apiKey: dotenv.get("API_KEY"),
+                appId: dotenv.get("APP_ID"),
+                messagingSenderId: dotenv.get("MESSAGING_SENDER_ID"),
+                projectId: dotenv.get("PROJECT_ID"),
+                storageBucket: dotenv.get("STORAGE_BUCKET")));
       } catch (e) {
         Get.snackbar("ERROR", "error initializing", colorText: Colors.red);
       }

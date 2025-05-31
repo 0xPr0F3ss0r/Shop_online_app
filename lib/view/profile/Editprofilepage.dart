@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:live_app/controller/Editprofilecontroller.dart';
 import 'package:live_app/controller/profilepagecontroller.dart';
 import 'package:live_app/model/user_model.dart';
@@ -36,7 +34,6 @@ class EditProfilePage extends StatelessWidget {
                 editProfileController.secondName.text =
                     userData.secondName ?? '';
                 editProfileController.name.text = userData.fullName ?? '';
-                editProfileController.email.text = userData.email ?? '';
                 editProfileController.phone.text = userData.phone ?? '';
                 editProfileController.website.text = userData.website ?? '';
                 editProfileController.location.text = userData.location ?? '';
@@ -71,18 +68,17 @@ class EditProfilePage extends StatelessWidget {
                         keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 20),
-
-                      // Email Field
+                      //full name filed
                       TextField(
-                        controller: editProfileController.email,
+                        controller: editProfileController.name,
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           labelStyle: TextStyle(color: Colors.blue),
-                          labelText: "Email",
-                          icon: Icon(Icons.email, color: Colors.white),
+                          labelText: "Full Name",
+                          icon: Icon(Icons.person_outline, color: Colors.white),
                           border: OutlineInputBorder(),
                         ),
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 20),
 
@@ -131,35 +127,25 @@ class EditProfilePage extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           // Validate fields
-                          if (editProfileController.email.text.isEmpty &&
-                              editProfileController.phone.text.isEmpty &&
+                          if (editProfileController.phone.text.isEmpty &&
                               editProfileController.website.text.isEmpty &&
-                              editProfileController.location.text.isEmpty&&
+                              editProfileController.location.text.isEmpty &&
                               editProfileController.name.text.isEmpty &&
                               editProfileController.firstName.text.isEmpty &&
-                              editProfileController.secondName.text.isEmpty
-                              ) {
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.error,
-                              text:
-                                  'Save Failed!, Please fill in all fields',
-                              autoCloseDuration: const Duration(seconds: 5),
-                              showConfirmBtn: false,
-                            );
-                            // Get.snackbar("Error", "Please fill in all fields",
-                            //     snackPosition: SnackPosition.BOTTOM);
+                              editProfileController.secondName.text.isEmpty) {
+                            Get.snackbar("Error", "Please fill in all fields",
+                                snackPosition: SnackPosition.BOTTOM);
                             return;
                           }
                           editProfileController.updateProfile(context);
                         },
-                        child: const Text("Save"),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 50, vertical: 15),
                           textStyle: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
+                        child: const Text("Save"),
                       ),
                     ],
                   ),

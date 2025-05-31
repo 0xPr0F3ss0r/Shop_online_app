@@ -69,7 +69,7 @@ class Vviewproductspage extends StatelessWidget {
                   final imagePath = product['productImage'] ?? '';
                   final price = product['productPrice'] ?? '0';
                   final brand = product['productBrand'] ?? 'No Brand';
-                  final productID = product['productID'] ?? 'no id';
+                  // final productID = product['productID'] ?? 'no id';
                   return Card(
                     elevation: 5, // Add shadow
                     shape: RoundedRectangleBorder(
@@ -117,7 +117,7 @@ class Vviewproductspage extends StatelessWidget {
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return Image.network(
-                                          "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg", // Placeholder image
+                                          "https://i.pinimg.com/736x/de/3f/ec/de3fecf5e76cad3e5e0ab6163e49d5bd.jpg", // Placeholder image
                                           fit: BoxFit.cover,
                                         );
                                       },
@@ -130,7 +130,7 @@ class Vviewproductspage extends StatelessWidget {
                                     );
                                   } else {
                                     return Image.network(
-                                      "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg", // Placeholder image
+                                      "https://i.pinimg.com/736x/de/3f/ec/de3fecf5e76cad3e5e0ab6163e49d5bd.jpg", // Placeholder image
                                       fit: BoxFit.cover,
                                       width: 200,
                                     );

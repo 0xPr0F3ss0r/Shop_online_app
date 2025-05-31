@@ -19,10 +19,14 @@ class Productinfo extends StatelessWidget {
     Productinfocontroller controller = Get.put(Productinfocontroller());
     ProfilePageController profileController = Get.put(ProfilePageController());
     final Map<String, dynamic>? productinfo = Get.arguments;
-    String profileImage = productinfo!['profile image'] ??
-        'https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg';
-    String productImage = productinfo['productImage'] ??
-        "https://www.pinterest.com/pin/19281104650773307/";
+    String profileImage = productinfo!['profile image'].toString().isEmpty ||
+            productinfo['profile image'] == "unknown"
+        ? 'https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg'
+        : productinfo['profile image'];
+    String productImage = productinfo['productImage'].toString().isEmpty ||
+            productinfo['productImage'] == "unknown"
+        ? "https://i.pinimg.com/736x/de/3f/ec/de3fecf5e76cad3e5e0ab6163e49d5bd.jpg"
+        : productinfo['productImage'];
     String email = productinfo['email'].toString().isEmpty
         ? 'empty'
         : productinfo['email'];
@@ -99,15 +103,16 @@ class Productinfo extends StatelessWidget {
                   GestureDetector(
                       onTap: () {
                         controller.GoToProfileProductInfo(email);
-                        // print(controller.UserWithProduct);
-                        // Get.to(() => profileOfProductUser(),
-                        //     arguments: controller.UserWithProduct);
                       },
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: CircleAvatar(
                             child: Image.network(
-                                height: 200, width: 200, profileImage),
+                                height: 200,
+                                width: 200,
+                                profileImage.isEmpty
+                                    ? "https://i.pinimg.com/736x/de/3f/ec/de3fecf5e76cad3e5e0ab6163e49d5bd.jpg"
+                                    : profileImage),
                           )))
                 ],
               ),

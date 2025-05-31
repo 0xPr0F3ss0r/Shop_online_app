@@ -11,7 +11,6 @@ class EditProfilePageController extends GetxController {
   TextEditingController firstName = TextEditingController();
   TextEditingController secondName = TextEditingController();
   TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController website = TextEditingController();
   TextEditingController location = TextEditingController();
@@ -25,7 +24,6 @@ class EditProfilePageController extends GetxController {
     name.text = controller.nameProfilePage ?? '';
     firstName.text = controller.firstname ?? '';
     secondName.text = controller.secondName ?? '';
-    email.text = controller.emailText ?? '';
     phone.text = controller.phone ?? '';
     website.text = controller.website ?? '';
     location.text = controller.location ?? '';
@@ -35,7 +33,6 @@ class EditProfilePageController extends GetxController {
     String first = firstName.text.trim();
     String second = secondName.text.trim();
     String myname = name.text.trim();
-    String newEmail = email.text.trim();
     String userId =
         FirebaseAuth.instance.currentUser!.uid; // Get the current user's uid
 
@@ -47,21 +44,11 @@ class EditProfilePageController extends GetxController {
         autoCloseDuration: const Duration(seconds: 5),
         showConfirmBtn: false,
       );
-      Get.snackbar("Invalid username", "Please enter valid usernames.", colorText: Colors.red);
+      Get.snackbar("Invalid username", "Please enter valid usernames.",
+          colorText: Colors.red);
       return;
     }
 
-    if (!GetUtils.isEmail(newEmail)) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'Invalid Email", "Please enter a valid email address.',
-        autoCloseDuration: const Duration(seconds: 5),
-        showConfirmBtn: false,
-      );
-      Get.snackbar("Invalid Email", "Please enter a valid email address.", colorText: Colors.red);
-      return;
-    }
     DocumentReference docRef = users.doc(userId);
 
     try {
@@ -69,13 +56,11 @@ class EditProfilePageController extends GetxController {
       final docSnapshot = await docRef.get();
 
       if (docSnapshot.exists) {
-
         // Update existing document
         await docRef.update({
           'FirstName': first,
           'secondName': second,
           'FullName': myname,
-          'Email': newEmail,
           'Phone': phone.text,
           'Website': website.text,
           'Location': location.text,
@@ -86,20 +71,19 @@ class EditProfilePageController extends GetxController {
           'FirstName': first,
           'secondName': second,
           'FullName': myname,
-          'Email': newEmail,
           'Phone': phone.text,
           'Website': website.text,
           'Location': location.text,
         });
       }
       // Update email in FirebaseAuth
-      await FirebaseAuth.instance.currentUser!.updateEmail(newEmail);
+      await FirebaseAuth.instance.currentUser!
+          .updateEmail(controller.emailText!);
 
       // Update the local controller values
       controller.firstname = first;
       controller.secondName = second;
       controller.nameProfilePage = myname;
-      controller.emailText = newEmail;
       controller.phone = phone.text;
       controller.website = website.text;
       controller.location = location.text;
@@ -108,9 +92,8 @@ class EditProfilePageController extends GetxController {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.success,
-        text: ' Success", "Profile updated successfully.',
+        text: 'Success, Profile updated successfully.',
         autoCloseDuration: const Duration(seconds: 5),
-        showConfirmBtn: false,
       );
       //Get.snackbar("Success", "Profile updated successfully.", colorText: Colors.green);
       Get.back(); // Navigate back to the profile page
@@ -118,9 +101,8 @@ class EditProfilePageController extends GetxController {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
-        text: 'Error", "Failed to update profile: ${e.toString()}',
+        text: 'Error, Failed to update profile: ${e.toString()}',
         autoCloseDuration: const Duration(seconds: 5),
-        showConfirmBtn: false,
       );
     }
   }

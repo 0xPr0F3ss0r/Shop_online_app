@@ -325,6 +325,8 @@ class ProfilePage extends StatelessWidget {
                                     IconButton(
                                       onPressed: () {
                                         Get.to(EditProfilePage(), arguments: {
+                                          'fullname':
+                                              controller.nameProfilePage,
                                           'name': controller.nameProfilePage,
                                           'email': controller.emailText,
                                           'phone': controller.phone,

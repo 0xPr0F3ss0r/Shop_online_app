@@ -19,17 +19,19 @@ class searchpagecontroller extends GetxController {
       try {
         Get.to(() => Productinfo(), arguments: data);
       } catch (e) {
-        Get.snackbar("Error", "server is busy , please try again later.",colorText: Colors.red,backgroundColor: Colors.black);
+        Get.snackbar("Error", "server is busy , please try again later.",
+            colorText: Colors.red, backgroundColor: Colors.black);
       }
     } else {
-      Get.snackbar("Error", "no data found , please try again later.",colorText: Colors.red,backgroundColor: Colors.black);
+      Get.snackbar("Error", "no data found , please try again later.",
+          colorText: Colors.red, backgroundColor: Colors.black);
     }
   }
 
   Future<List<Map<String, dynamic>>> fetchUsersWithProducts() async {
     try {
       final snapshot = await _firestore.collection("users").get();
-       // Clear the list before adding new data
+      // Clear the list before adding new data
       UsersWithProducts.clear();
       for (var doc in snapshot.docs) {
         Map<String, dynamic> userData = doc.data();
@@ -41,23 +43,29 @@ class searchpagecontroller extends GetxController {
         // Extract all products dynamically
         List<Map<String, dynamic>> products = [];
         userData.forEach((key, value) {
-          if (key.startsWith("product of user") && value is Map<String, dynamic>) {
-            products.add({
-              "productImage": value["productImage"] ?? "",
-              "productBrand": value["productBrand"] ?? "",
-              "productType": value["productType"] ?? "",
-              "productBrandSize": value["productBrandSize"] ?? "",
-              "productPrice": value["productPrice"] ?? "",
-              "productColor": value["productBrandColor"] ?? "",
+          if (key.startsWith("product_of_user ")) {
+            Map<String, dynamic> myvalue = value as Map<String, dynamic>;
+            myvalue.forEach((key_product, value_product) {
+              products.add({
+                "productImage": value_product["productImage"] ?? "",
+                "productBrand": value_product["productBrand"] ?? "",
+                "productType": value_product["productType"] ?? "",
+                "productBrandSize": value_product["productBrandSize"] ?? "",
+                "productPrice": value_product["productPrice"] ?? "",
+                "productColor": value_product["productBrandColor"] ?? "",
+                "productID": key_product,
+              });
             });
+          } else {
+            Get.snackbar("error", "product not found ,try again later");
           }
         });
-           UsersWithProducts.add({
+        UsersWithProducts.add({
           "userName": username,
-           "profileImage": profileimage,
-           "email": email,
-           "products": products,
-         });
+          "profileImage": profileimage,
+          "email": email,
+          "products": products,
+        });
       }
       update(); // Notify listeners that the data has changed
       return UsersWithProducts;
@@ -67,7 +75,6 @@ class searchpagecontroller extends GetxController {
     }
   }
 
-  
   @override
   void onInit() {
     super.onInit();

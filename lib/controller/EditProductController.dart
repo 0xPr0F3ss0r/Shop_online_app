@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -30,6 +29,7 @@ class EditProductController extends GetxController {
   String? ProductImageUpdate = "";
   String? productIDUpdate = "";
   bool isLoding = false;
+  String? downloadUrl;
 
   void onclear() {
     // Dispose controllers when not needed
@@ -89,12 +89,12 @@ class EditProductController extends GetxController {
     update();
   }
 
-  Future<void> pickImage(ImageSource source) async {
+  Future<void> pickImage(ImageSource source, BuildContext context) async {
     try {
       final XFile? pickedFile = await ImagePicker().pickImage(source: source);
       if (pickedFile != null) {
         productImageUpdate = pickedFile.path;
-        await uploadImageToFirebase();
+        await uploadImageToFirebase(context);
         update();
       }
     } catch (e) {
@@ -102,22 +102,22 @@ class EditProductController extends GetxController {
     }
   }
 
-  Future<String?> uploadImageToFirebase() async {
-    if (productImageUpdate == null) return null;
-
-    try {
-      final String productId = Uuid().v4();
-      final String userId = user?.uid ?? 'unknown';
-
-      final Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child("users/$userId/products/product_$productId.jpg");
-
-      await storageRef.putFile(File(productImageUpdate!));
-      return await storageRef.getDownloadURL();
-    } catch (e) {
-      Get.snackbar("Error", "Image upload failed: ${e.toString()}");
+  Future<void> uploadImageToFirebase(BuildContext context) async {
+    if (productImageUpdate == null) {
+      Get.snackbar("Error", "No image selected.",
+          snackPosition: SnackPosition.BOTTOM);
       return null;
+    }
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child(
+          "product_pictures/{$productIDUpdate/${FirebaseAuth.instance.currentUser!.uid}.jpg");
+      TaskSnapshot snapshot =
+          await storageRef.putFile(File(productImageUpdate!));
+      downloadUrl = await snapshot.ref.getDownloadURL();
+      print("downloaded url is $downloadUrl");
+    } catch (e) {
+      Get.snackbar("Error", "Error uploading image ,please try again!",
+          colorText: Colors.red);
     }
   }
 
@@ -157,9 +157,8 @@ class EditProductController extends GetxController {
         Get.snackbar("Error", "Product not found");
         return;
       }
-
+      print("before $downloadUrl");
       // 4. Perform update (using EXACT field name)
-      final String? newImageUrl = await uploadImageToFirebase();
       String field = "product_of_user ";
       await userDoc.update({
         '$field.$productIDUpdate': {
@@ -167,7 +166,8 @@ class EditProductController extends GetxController {
           'productBrand': BrandNameUpdate.text.isEmpty
               ? productNameUpdate
               : BrandNameUpdate.text,
-          'productImage': newImageUrl ?? productImageUpdate,
+          'productImage':
+              downloadUrl!.isEmpty ? productImageUpdate : downloadUrl,
           'productPrice': BrandPriceUpdate.text.isEmpty
               ? productPriceUpdate
               : BrandPriceUpdate.text,
