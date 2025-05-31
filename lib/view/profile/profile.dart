@@ -12,6 +12,7 @@ import 'package:live_app/model/user_model.dart';
 import 'package:live_app/view/orders/ViewOrdersPage.dart';
 import 'package:live_app/view/profile/Editprofilepage.dart';
 import 'package:live_app/view/profile/ViewProductsPage.dart';
+
 // ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
   ProfilePageController controller = Get.put(ProfilePageController());
@@ -32,13 +33,12 @@ class ProfilePage extends StatelessWidget {
           elevation: 2,
           title: const Text(
             "Profile",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           centerTitle: true,
         ),
         body: RefreshIndicator(
-          onRefresh: ()async{
+          onRefresh: () async {
             controller.fetchUserProducts();
           },
           child: SingleChildScrollView(
@@ -55,7 +55,8 @@ class ProfilePage extends StatelessWidget {
                             UserModel userData = snapshot.data!;
                             controller.firstname = userData.firstName ?? '';
                             controller.secondName = userData.secondName ?? '';
-                            controller.nameProfilePage = userData.fullName ?? '';
+                            controller.nameProfilePage =
+                                userData.fullName ?? '';
                             controller.emailText = userData.email ?? '';
                             controller.phone = userData.phone ?? '';
                             controller.website = userData.website ?? '';
@@ -67,31 +68,45 @@ class ProfilePage extends StatelessWidget {
                               children: [
                                 Center(
                                   child: Padding(
-                                    padding: EdgeInsets.only(top: 10),
+                                    padding: const EdgeInsets.only(top: 10),
                                     child: Stack(
                                       children: [
-                                         Container(
-                                           child: CircleAvatar(
-                                              backgroundColor: Colors.blueAccent,
-                                              radius: 110,
-                                              child: CircleAvatar(
-                                                radius: 107,
-                                                backgroundImage:
-                                                 controller.Image != null && controller.Image!.isNotEmpty
-                                               ? (controller.Image!.startsWith('http')
-                                                   ? NetworkImage(controller.Image!) as ImageProvider<Object>
-                                                   : (() {
-                                                       final file = File(controller.Image!);
-                                                       return file.existsSync()
-                                                           ? FileImage(file) as ImageProvider<Object>
-                                                           : const AssetImage("assets/images/error_image.jpg") as ImageProvider<Object>;
-                                                     })())
-                                               : const NetworkImage("https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg"),
-                                           
-                                              ),
+                                        Container(
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.blueAccent,
+                                            radius: 110,
+                                            child: CircleAvatar(
+                                              radius: 107,
+                                              backgroundImage: controller
+                                                              .Image !=
+                                                          null &&
+                                                      controller
+                                                          .Image!.isNotEmpty
+                                                  ? (controller.Image!
+                                                          .startsWith('http')
+                                                      ? NetworkImage(
+                                                              controller.Image!)
+                                                          as ImageProvider<
+                                                              Object>
+                                                      : (() {
+                                                          final file = File(
+                                                              controller
+                                                                  .Image!);
+                                                          return file
+                                                                  .existsSync()
+                                                              ? FileImage(file)
+                                                                  as ImageProvider<
+                                                                      Object>
+                                                              : const AssetImage(
+                                                                      "assets/images/error_image.jpg")
+                                                                  as ImageProvider<
+                                                                      Object>;
+                                                        })())
+                                                  : const NetworkImage(
+                                                      "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg"),
                                             ),
-                                         ),
-                                        
+                                          ),
+                                        ),
                                         Positioned(
                                             top: 180,
                                             left: 150,
@@ -101,79 +116,95 @@ class ProfilePage extends StatelessWidget {
                                                     Container(
                                                       height: 300,
                                                       width: 500,
-                                                      decoration: const BoxDecoration(
+                                                      decoration:
+                                                          const BoxDecoration(
                                                         color: Color.fromARGB(
                                                             255, 28, 89, 180),
-                                                        borderRadius: BorderRadius.only(
-                                                          topLeft: Radius.circular(20),
-                                                          topRight: Radius.circular(20),
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  20),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  20),
                                                         ),
                                                       ),
                                                       child: Padding(
-                                                        padding: EdgeInsets.all(20),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(20),
                                                         child: Column(
                                                           children: <Widget>[
                                                             Container(
                                                               decoration:
                                                                   const BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius.all(
-                                                                        Radius.circular(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
                                                                             20)),
                                                               ),
-                                                              child: MaterialButton(
+                                                              child:
+                                                                  MaterialButton(
                                                                 onPressed: () {
-                                                                  controller
-                                                                      .pickImageFromGallery(
-                                                                          "profile",
-                                                                          context);
+                                                                  controller.pickImageFromGallery(
+                                                                      "profile",
+                                                                      context);
                                                                 },
                                                                 minWidth: 300,
-                                                                color: Colors.blue,
+                                                                color:
+                                                                    Colors.blue,
                                                                 shape:
                                                                     RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius
-                                                                          .circular(20),
+                                                                          .circular(
+                                                                              20),
                                                                   side: const BorderSide(
                                                                       color: Colors
                                                                           .black), // Border
                                                                 ),
-                                                                child: const Text(
+                                                                child:
+                                                                    const Text(
                                                                   "From Pictures",
                                                                   style: TextStyle(
                                                                       color: Colors
-                                                                          .white), 
+                                                                          .white),
                                                                 ),
                                                               ),
                                                             ),
-                                                            SizedBox(height: 20),
+                                                            const SizedBox(
+                                                                height: 20),
                                                             Container(
                                                               decoration:
                                                                   const BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius.all(
-                                                                        Radius.circular(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
                                                                             20)),
                                                               ),
-                                                              child: MaterialButton(
+                                                              child:
+                                                                  MaterialButton(
                                                                 onPressed: () {
                                                                   controller
                                                                       .pickImageFromCamera(
                                                                           context);
                                                                 },
                                                                 minWidth: 300,
-                                                                color: Colors.blue,
+                                                                color:
+                                                                    Colors.blue,
                                                                 shape:
                                                                     RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius
-                                                                          .circular(20),
+                                                                          .circular(
+                                                                              20),
                                                                   side: const BorderSide(
                                                                       color: Colors
                                                                           .black), // Border
                                                                 ),
-                                                                child: const Text(
+                                                                child:
+                                                                    const Text(
                                                                   "From Camera",
                                                                   style: TextStyle(
                                                                       color: Colors
@@ -185,30 +216,34 @@ class ProfilePage extends StatelessWidget {
                                                               height: 10,
                                                             ),
                                                             Container(
-                                                              decoration: const BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius.all(
-                                                                        Radius.circular(
+                                                              decoration:
+                                                                  const BoxDecoration(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
                                                                             20)),
                                                               ),
-                                                              child: MaterialButton(
+                                                              child:
+                                                                  MaterialButton(
                                                                 onPressed: () {
-                                                                  
                                                                   controller
                                                                       .removePicture();
                                                                 },
                                                                 minWidth: 300,
-                                                                color: Colors.blue,
+                                                                color:
+                                                                    Colors.blue,
                                                                 shape:
                                                                     RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius
-                                                                          .circular(20),
-                                                                  side: BorderSide(
+                                                                          .circular(
+                                                                              20),
+                                                                  side: const BorderSide(
                                                                       color: Colors
                                                                           .black), // Border
                                                                 ),
-                                                                child: const Text(
+                                                                child:
+                                                                    const Text(
                                                                   "Remove Picture",
                                                                   style: TextStyle(
                                                                       color: Colors
@@ -216,7 +251,7 @@ class ProfilePage extends StatelessWidget {
                                                                 ),
                                                               ),
                                                             ),
-                                                            SizedBox(
+                                                            const SizedBox(
                                                               height: 30,
                                                             ),
                                                             InkWell(
@@ -224,7 +259,8 @@ class ProfilePage extends StatelessWidget {
                                                               child: const Text(
                                                                 "Close",
                                                                 style: TextStyle(
-                                                                    color: Colors.red),
+                                                                    color: Colors
+                                                                        .red),
                                                               ),
                                                             ),
                                                           ],
@@ -233,7 +269,7 @@ class ProfilePage extends StatelessWidget {
                                                     ),
                                                   );
                                                 },
-                                                icon: Icon(
+                                                icon: const Icon(
                                                   Icons.camera_alt,
                                                   size: 30,
                                                 )))
@@ -241,49 +277,51 @@ class ProfilePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   controller.nameProfilePage!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 27,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 5),
-                                Text(
+                                const SizedBox(height: 5),
+                                const Text(
                                   "Active since - Jul, 2019",
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Container(
                                   width: 200,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 132, 170, 235),
+                                    color: const Color.fromARGB(
+                                        255, 132, 170, 235),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Center(
-                                      child: controller.followers != null 
-                                              
+                                      child: controller.followers != null
                                           ? Text(
                                               "${controller.followers}followers",
-                                              style: TextStyle(color: Colors.black),
+                                              style: const TextStyle(
+                                                  color: Colors.black),
                                             )
-                                          : Text(
+                                          : const Text(
                                               "0 followers",
-                                              style: TextStyle(color: Colors.black),
+                                              style: TextStyle(
+                                                  color: Colors.black),
                                             )),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Personal Information",
-                                      style:
-                                          TextStyle(color: Colors.white, fontSize: 18),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     IconButton(
                                       onPressed: () {
                                         Get.to(EditProfilePage(), arguments: {
@@ -294,7 +332,8 @@ class ProfilePage extends StatelessWidget {
                                           'location': controller.location
                                         });
                                       },
-                                      icon: Icon(Icons.edit, color: Colors.blue),
+                                      icon: const Icon(Icons.edit,
+                                          color: Colors.blue),
                                     ),
                                     InkWell(
                                       onTap: () {
@@ -305,148 +344,163 @@ class ProfilePage extends StatelessWidget {
                                           'location': controller.location
                                         });
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         "Edit",
                                         style: TextStyle(color: Colors.blue),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                      leading: Icon(Icons.email),
-                                      title: Text("Email",
-                                          style: TextStyle(color: Colors.white)),
+                                      leading: const Icon(Icons.email),
+                                      title: const Text("Email",
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                       trailing: controller.emailText != null
                                           ? Text(controller.emailText!,
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15))
+                                          : const Text('',
                                               style: TextStyle(
-                                                  color: Colors.white, fontSize: 15))
-                                          : Text('',
-                                              style: TextStyle(
-                                                  color: Colors.white, fontSize: 15))),
+                                                  color: Colors.white,
+                                                  fontSize: 15))),
                                 ),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                      leading: Icon(Icons.person),
-                                      title: Text("First Name",
-                                          style: TextStyle(color: Colors.white)),
+                                      leading: const Icon(Icons.person),
+                                      title: const Text("First Name",
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                       trailing: controller.firstname != null
                                           ? Text(controller.firstname!,
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15))
+                                          : const Text('',
                                               style: TextStyle(
-                                                  color: Colors.white, fontSize: 15))
-                                          : Text('',
-                                              style: TextStyle(
-                                                  color: Colors.white, fontSize: 15))),
+                                                  color: Colors.white,
+                                                  fontSize: 15))),
                                 ),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                      leading: Icon(Icons.person),
-                                      title: Text("Second Name",
-                                          style: TextStyle(color: Colors.white)),
+                                      leading: const Icon(Icons.person),
+                                      title: const Text("Second Name",
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                       trailing: controller.secondName != null
                                           ? Text(controller.secondName!,
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15))
+                                          : const Text('',
                                               style: TextStyle(
-                                                  color: Colors.white, fontSize: 15))
-                                          : Text('',
-                                              style: TextStyle(
-                                                  color: Colors.white, fontSize: 15))),
+                                                  color: Colors.white,
+                                                  fontSize: 15))),
                                 ),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                    leading: Icon(Icons.phone),
-                                    title: Text("Phone",
+                                    leading: const Icon(Icons.phone),
+                                    title: const Text("Phone",
                                         style: TextStyle(color: Colors.white)),
                                     trailing: controller.phone != null
                                         ? Text(controller.phone!,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15))
+                                        : const Text('',
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 15))
-                                        : Text('',
-                                            style: TextStyle(
-                                                color: Colors.white, fontSize: 15)),
+                                                color: Colors.white,
+                                                fontSize: 15)),
                                   ),
                                 ),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                    leading: Icon(Icons.shop),
-                                    title: Text("Website",
+                                    leading: const Icon(Icons.shop),
+                                    title: const Text("Website",
                                         style: TextStyle(color: Colors.white)),
                                     trailing: controller.website != null
                                         ? Text(controller.website!,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15))
+                                        : const Text('',
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 15))
-                                        : Text('',
-                                            style: TextStyle(
-                                                color: Colors.white, fontSize: 15)),
+                                                color: Colors.white,
+                                                fontSize: 15)),
                                   ),
                                 ),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                    leading: Icon(Icons.location_on),
-                                    title: Text("Location",
+                                    leading: const Icon(Icons.location_on),
+                                    title: const Text("Location",
                                         style: TextStyle(color: Colors.white)),
                                     trailing: controller.location != null
                                         ? Text(controller.location!,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15))
+                                        : const Text('',
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 15))
-                                        : Text('',
-                                            style: TextStyle(
-                                                color: Colors.white, fontSize: 15)),
+                                                color: Colors.white,
+                                                fontSize: 15)),
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 const Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
                                       "Privacy Settings",
-                                      style:
-                                          TextStyle(color: Colors.white, fontSize: 18),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
                                     ),
                                   ],
                                 ),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                    leading: Icon(Icons.lock_outline),
-                                    title: Text("change your password",
+                                    leading: const Icon(Icons.lock_outline),
+                                    title: const Text("change your password",
                                         style: TextStyle(color: Colors.white)),
                                     trailing: IconButton(
                                         onPressed: () {
                                           Get.to(() => ChangePassword());
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.lock_person,
                                           color: Colors.blue,
                                         )),
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 const Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
                                       "Utilities",
-                                      style:
-                                          TextStyle(color: Colors.white, fontSize: 18),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
                                     ),
                                   ],
                                 ),
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                    leading: Icon(Icons.question_answer),
-                                    title: Text("Ask Help-Desk",
+                                    leading: const Icon(Icons.question_answer),
+                                    title: const Text("Ask Help-Desk",
                                         style: TextStyle(color: Colors.white)),
                                     trailing: IconButton(
                                         onPressed: () {},
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.forward,
                                           color: Colors.blue,
                                         )),
@@ -455,8 +509,8 @@ class ProfilePage extends StatelessWidget {
                                 Card(
                                   color: Colors.black,
                                   child: ListTile(
-                                    leading: Icon(Icons.logout),
-                                    title: Text("Log-Out",
+                                    leading: const Icon(Icons.logout),
+                                    title: const Text("Log-Out",
                                         style: TextStyle(color: Colors.white)),
                                     trailing: IconButton(
                                         onPressed: () {
@@ -465,63 +519,85 @@ class ProfilePage extends StatelessWidget {
                                               .setString("step", "1");
                                           Get.offAllNamed(AppRoute.Login);
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.forward,
                                           color: Colors.blue,
                                         )),
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     controller.type == "seller"
-                                        ? Text(
+                                        ? const Text(
                                             "Add Products",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 18),
+                                                color: Colors.white,
+                                                fontSize: 18),
                                           )
-                                        : SizedBox.shrink()
+                                        : const SizedBox.shrink()
                                   ],
                                 ),
                                 const SizedBox(height: 5),
                                 controller.type == "seller"
                                     ? Container(
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),border: Border.all(color: Colors.white)),
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: Column(
-                                            children: [    
-                                            Column(
-                                              children: [
-                                                Products(),
-                                              ],
-                                            )
-                                          ]
-                                          )
-                                          ),
-                                    )
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.white)),
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Column(children: [
+                                              Column(
+                                                children: [
+                                                  Products(),
+                                                ],
+                                              )
+                                            ])),
+                                      )
                                     : const SizedBox.shrink(),
-                                        const SizedBox(height: 5),
-                    controller.type == "seller"?
-                    Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.black
-                        ),
-                        child: ElevatedButton(onPressed: (){Get.to(Vviewproductspage());},child:const Text("Show All Products",style: TextStyle(color: Colors.blue),) ,)),
-                    ):const SizedBox.shrink(),
-                    const SizedBox(height: 10),
-                    controller.type == "seller"?
-                    Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.black
-                        ),
-                        child: ElevatedButton(onPressed: (){Get.to(Vieworderspage());},child:const Text("Show All Orders",style: TextStyle(color: Colors.blue),) ,)),
-                    ):const SizedBox.shrink()
+                                const SizedBox(height: 5),
+                                controller.type == "seller"
+                                    ? Center(
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Colors.black),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Get.to(Vviewproductspage());
+                                              },
+                                              child: const Text(
+                                                "Show All Products",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            )),
+                                      )
+                                    : const SizedBox.shrink(),
+                                const SizedBox(height: 10),
+                                controller.type == "seller"
+                                    ? Center(
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Colors.black),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Get.to(Vieworderspage());
+                                              },
+                                              child: const Text(
+                                                "Show All Orders",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            )),
+                                      )
+                                    : const SizedBox.shrink()
                               ],
                             );
                           } else if (snapshot.hasError) {
@@ -533,12 +609,17 @@ class ProfilePage extends StatelessWidget {
                             );
                           } else {
                             return const Center(
-                              child: Text("No user data found.",style: TextStyle(color: Colors.white,fontSize: 15),),
+                              child: Text(
+                                "No user data found.",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
                             );
                           }
                         } else if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else {
                           return const Center(
                             child: Text("error"),
@@ -546,11 +627,9 @@ class ProfilePage extends StatelessWidget {
                         }
                       },
                     ),
-                    
                   ],
                 ),
               ),
-              
             ),
           ),
         ));

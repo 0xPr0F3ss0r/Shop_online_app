@@ -14,6 +14,7 @@ class Products extends StatelessWidget {
   final formKey11 = GlobalKey<FormState>();
   final formkey12 = GlobalKey<FormState>();
   final formkey13 = GlobalKey<FormState>();
+  RxBool is_loading = false.obs;
   ProfilePageController controller = Get.put(ProfilePageController());
   bool SavedProduct = false;
   Products({super.key});
@@ -32,53 +33,53 @@ class Products extends StatelessWidget {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.deepPurple, width: 3),
                     borderRadius: BorderRadius.circular(20)),
-                child:  
-                   Column(
-                    children: [
-                      Expanded(
-                        flex:2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              child: GetBuilder<ProfilePageController>(
-                                  builder: (controller) {
-                                return Center(
-                                  child: DropdownButton<String>(
-                                    dropdownColor: Colors.black,
-                                    style: const TextStyle(color: Colors.blue),
-                                    borderRadius: BorderRadius.circular(10),
-                                    icon: const Icon(Icons.arrow_drop_down),
-                                    value: controller.productType,
-                                    onChanged: (String? newvalue) {
-                                      controller.changeValueDropDown(newvalue!);
-                                    },
-                                    underline: const SizedBox.shrink(),
-                                    items: const [
-                                      DropdownMenuItem(
-                                          value: "T-Cheart",
-                                          child: Text("T-Cheart")),
-                                      DropdownMenuItem(
-                                          value: "Jeans", child: Text("Jeans")),
-                                      DropdownMenuItem(
-                                          value: "basket", child: Text("basket")),
-                                      DropdownMenuItem(
-                                          value: "accessoir",
-                                          child: Text("accessoir"))
-                                    ],
-                                  ),
-                                );
-                              }),
-                            )
-                          ],
-                        ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: GetBuilder<ProfilePageController>(
+                                builder: (controller) {
+                              return Center(
+                                child: DropdownButton<String>(
+                                  dropdownColor: Colors.black,
+                                  style: const TextStyle(color: Colors.blue),
+                                  borderRadius: BorderRadius.circular(10),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  value: controller.productType,
+                                  onChanged: (String? newvalue) {
+                                    controller.changeValueDropDown(newvalue!);
+                                  },
+                                  underline: const SizedBox.shrink(),
+                                  items: const [
+                                    DropdownMenuItem(
+                                        value: "T-Cheart",
+                                        child: Text("T-Cheart")),
+                                    DropdownMenuItem(
+                                        value: "Jeans", child: Text("Jeans")),
+                                    DropdownMenuItem(
+                                        value: "basket", child: Text("basket")),
+                                    DropdownMenuItem(
+                                        value: "accessoir",
+                                        child: Text("accessoir"))
+                                  ],
+                                ),
+                              );
+                            }),
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                
+                    ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(width: 30,),
+            const SizedBox(
+              width: 30,
+            ),
             Expanded(
               flex: 2,
               child: Form(
@@ -86,7 +87,7 @@ class Products extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: TextFormEmail(
-                    validator: (val) => validate(val!, 3, 40, "username"),
+                    validator: (val) => validate(val!, 3, 40, "productName"),
                     borderWidth: 3,
                     controller: controller.BrandName,
                     prefixIcon: null,
@@ -108,178 +109,185 @@ class Products extends StatelessWidget {
         Row(
           children: [
             Container(
-  width: 150,
-  height: 150,
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(20),
-    border: Border.all(color: Colors.deepPurple, width: 4),
-  ),
-  child: controller.productImage != null && controller.productImage!.isNotEmpty
-      ? Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16), // Match container's radius
-              child: controller.productImage!.startsWith('http')
-                  ? Image.network(
-                      controller.productImage!,
-                      fit: BoxFit.cover,  // Prevents overflow
-                      width: double.infinity,
-                      height: double.infinity,
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.deepPurple, width: 4),
+              ),
+              child: controller.productImage != null &&
+                      controller.productImage!.isNotEmpty
+                  ? Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                              16), // Match container's radius
+                          child: controller.productImage!.startsWith('http')
+                              ? Image.network(
+                                  controller.productImage!,
+                                  fit: BoxFit.cover, // Prevents overflow
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                )
+                              : (() {
+                                  final file = File(controller.productImage!);
+                                  return file.existsSync()
+                                      ? Image.file(
+                                          file,
+                                          fit:
+                                              BoxFit.cover, // Prevents overflow
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        )
+                                      : Image.asset(
+                                          'assets/images/error_image.jpg',
+                                          fit: BoxFit
+                                              .cover, // Ensures proper scaling
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        );
+                                })(),
+                        ),
+                        Positioned(
+                          bottom: 10, // Adjust positioning
+                          left: 10, // Adjust positioning
+                          child: IconButton(
+                            onPressed: () {
+                              Get.bottomSheet(
+                                Container(
+                                  height: 300,
+                                  width: 500,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 28, 89, 180),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      children: <Widget>[
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller.pickImageFromGallery(
+                                                "Product", context);
+                                          },
+                                          child: const Text("From Pictures"),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller
+                                                .pickImageFromCamera(context);
+                                          },
+                                          child: const Text("From Camera"),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller.removePictureOfProduct();
+                                          },
+                                          child: const Text("Remove Picture"),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        InkWell(
+                                          onTap: Get.back,
+                                          child: const Text(
+                                            "Close",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              color: Colors.blue,
+                              size: 24, // Increased size for better visibility
+                            ),
+                          ),
+                        ),
+                      ],
                     )
-                  : (() {
-                      final file = File(controller.productImage!);
-                      return file.existsSync()
-                          ? Image.file(
-                              file,
-                              fit: BoxFit.cover, // Prevents overflow
-                              width: double.infinity,
-                              height: double.infinity,
-                            )
-                          : Image.asset(
-                              'assets/images/error_image.jpg',
-                              fit: BoxFit.cover, // Ensures proper scaling
-                              width: double.infinity,
-                              height: double.infinity,
-                            );
-                    })(),
-            ),
-            Positioned(
-              bottom: 10, // Adjust positioning
-              left: 10, // Adjust positioning
-              child: IconButton(
-                onPressed: () {
-                  Get.bottomSheet(
-                    Container(
-                      height: 300,
-                      width: 500,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 28, 89, 180),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: <Widget>[
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.pickImageFromGallery("Product", context);
-                              },
-                              child: const Text("From Pictures"),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.pickImageFromCamera(context);
-                              },
-                              child: const Text("From Camera"),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.removePictureOfProduct();
-                              },
-                              child: const Text("Remove Picture"),
-                            ),
-                            const SizedBox(height: 20),
-                            InkWell(
-                              onTap: Get.back,
-                              child: const Text(
-                                "Close",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
-                        ),
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "IMAGE",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          const SizedBox(height: 5),
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.bottomSheet(
+                                Container(
+                                  height: 300,
+                                  width: 500,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      children: <Widget>[
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller.pickImageFromGallery(
+                                                "Product", context);
+                                          },
+                                          child: const Text("From Pictures"),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller
+                                                .pickImageFromCamera(context);
+                                          },
+                                          child: const Text("From Camera"),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller.removePictureOfProduct();
+                                          },
+                                          child: const Text("Remove Picture"),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        InkWell(
+                                          onTap: Get.back,
+                                          child: const Text(
+                                            "Close",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text("Choose"),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.blue,
-                  size: 24, // Increased size for better visibility
-                ),
-              ),
             ),
-          ],
-        )
-      : Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "IMAGE",
-                style: TextStyle(color: Colors.white),
-              ),
-              const SizedBox(height: 5),
-              ElevatedButton(
-                onPressed: () {
-                  Get.bottomSheet(
-                    Container(
-                      height: 300,
-                      width: 500,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 28, 89, 180),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: <Widget>[
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.pickImageFromGallery("Product", context);
-                              },
-                              child: const Text("From Pictures"),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.pickImageFromCamera(context);
-                              },
-                              child: const Text("From Camera"),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.removePictureOfProduct();
-                              },
-                              child: const Text("Remove Picture"),
-                            ),
-                            const SizedBox(height: 20),
-                            InkWell(
-                              onTap: Get.back,
-                              child: const Text(
-                                "Close",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                child: const Text("Choose"),
-              ),
-            ],
-          ),
-        ),
-),
-
             const SizedBox(width: 5),
             Expanded(
               flex: 2,
               child: Form(
                 key: formKey11,
                 child: TextFormEmail(
-                  validator: (val) =>validate(val!, 1, 999, '') ,
+                  validator: (val) => validate(val!, 1, 999, ''),
                   borderWidth: 3,
                   controller: controller.BrandSize,
                   prefixIcon: null,
@@ -305,7 +313,7 @@ class Products extends StatelessWidget {
               child: Form(
                 key: formkey12,
                 child: TextFormEmail(
-                  validator: (val) =>validate(val!, 1, 999, '') ,
+                  validator: (val) => validate(val!, 1, 999, ''),
                   borderWidth: 3,
                   controller: controller.BrandColor,
                   prefixIcon: null,
@@ -332,7 +340,7 @@ class Products extends StatelessWidget {
               child: Form(
                 key: formkey13,
                 child: TextFormEmail(
-                  validator: (val) =>validate(val!, 1, 999, '') ,
+                  validator: (val) => validate(val!, 1, 999, ''),
                   borderWidth: 3,
                   controller: controller.BrandPrice,
                   prefixIcon: null,
@@ -356,26 +364,28 @@ class Products extends StatelessWidget {
             Center(
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.black,
-                  border: Border.all(
-                    color: Colors.white,
-                  )
-                ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.black,
+                    border: Border.all(
+                      color: Colors.white,
+                    )),
                 width: 240,
                 child: MaterialButton(
                   onPressed: () {
                     SavedProduct = true;
                     controller.isLoding
-                        ? print('hello')
-                        : controller.UploadProductToFirestoreAndFirebase(context);
+                        ? is_loading.value = true
+                        : controller.UploadProductToFirestoreAndFirebase(
+                            context);
                   },
-                  child: controller.isLoding
-                      ? const CircularProgressIndicator()
-                      : const Text(
-                          "Save",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                  child: GetBuilder<ProfilePageController>(
+                    builder: (controller) => controller.isLoding
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                            "Save",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                  ),
                 ),
               ),
             ),
@@ -389,39 +399,6 @@ class Products extends StatelessWidget {
             )
           ],
         ),
-        // const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     Center(
-        //       child: Padding(
-        //         padding: const EdgeInsets.only(right: 45),
-        //         child: Container(
-        //           decoration: BoxDecoration(
-        //             borderRadius: BorderRadius.circular(20),
-        //             color: Colors.black,
-        //             border: Border.all(
-        //               color: Colors.white,
-        //               width: 1
-        //             )
-        //           ),
-        //           width: 240,
-        //           child: MaterialButton(
-        //             onPressed: ()async {
-        //                await controller.DeleteProductFromFirebase();
-        //             },
-        //             child: controller.isLoding
-        //                 ? const CircularProgressIndicator()
-        //                 : const Text(
-        //                     "Delete last product completely",
-        //                     style: TextStyle(color: Colors.red),
-        //                   ),
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // )
       ],
     );
   }

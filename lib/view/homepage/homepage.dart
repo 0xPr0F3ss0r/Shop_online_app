@@ -5,6 +5,7 @@ import 'package:live_app/controller/homecontroller.dart';
 import 'package:live_app/controller/profilepagecontroller.dart';
 import 'package:live_app/view/profile/profile.dart';
 import 'package:lottie/lottie.dart';
+
 // ignore: must_be_immutable
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -35,22 +36,22 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.red,
         onPressed: () async {
           if (profileController.type == "seller") {
-      if (controller.isLive.value) {
-        controller.stopLiveStream();
-      } else {
-        controller.startLiveStream();
-      }
-    } else {
-      Get.snackbar(
-        "Info",
-        "Sorry, this option is allowed just for the seller. You should be a seller to use it.",
-        colorText: Colors.red[200],
-        snackPosition: SnackPosition.TOP,
-      );
-    }
+            if (controller.isLive.value) {
+              controller.stopLiveStream();
+            } else {
+              controller.startLiveStream();
+            }
+          } else {
+            Get.snackbar(
+              "Info",
+              "Sorry, this option is allowed just for the seller. You should be a seller to use it.",
+              colorText: Colors.red[200],
+              snackPosition: SnackPosition.TOP,
+            );
+          }
         },
-        child:
-            const Icon(Icons.videocam, color: const Color.fromARGB(255, 44, 42, 42)),
+        child: const Icon(Icons.videocam,
+            color: const Color.fromARGB(255, 44, 42, 42)),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -59,40 +60,37 @@ class HomePage extends StatelessWidget {
           controller.checkLiveFollower();
           await controller.GetNumberOfFollowers();
         },
-        child:controller.ListLiveStream.isEmpty?
-        Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white,
-                width: 1,
-              )
-            ),child:  Padding(
-              padding:  EdgeInsets.all(7.0),
-              child: Lottie.asset("assets/images/nolive.json",height: 200),
-            )
-            )
-            )
-        :
-         Padding(
-          padding: EdgeInsets.all(10),
-          child: FutureBuilder(
-            future: controller.fetchLiveStream(),
-            builder: (context,snapshot)=>
-             ListView.builder(
-              itemCount: controller.ListLiveStream.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _buildListItem(controller, profileController, index,snapshot);
-              },
-            ),
-          ),
-        ),
+        child: controller.ListLiveStream.isEmpty
+            ? Center(
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 1,
+                        )),
+                    child: Padding(
+                      padding: EdgeInsets.all(7.0),
+                      child: Lottie.asset("assets/images/nolive.json",
+                          height: 200),
+                    )))
+            : Padding(
+                padding: EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: controller.fetchLiveStream(),
+                  builder: (context, snapshot) => ListView.builder(
+                    itemCount: controller.ListLiveStream.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildListItem(
+                          controller, profileController, index, snapshot);
+                    },
+                  ),
+                ),
+              ),
       ),
     );
   }
-
 
   Widget _buildAppBarTitle(
       HomeController controller, ProfilePageController profileController) {
@@ -127,7 +125,7 @@ class HomePage extends StatelessWidget {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                   Get.to(() => ProfilePage());
+                    Get.to(() => ProfilePage());
                   },
                   child: ClipOval(
                     child: profileController.Image != null &&
@@ -180,8 +178,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(HomeController controller,
-      ProfilePageController profileController, int index,AsyncSnapshot<void> snapshot) {
+  Widget _buildListItem(
+      HomeController controller,
+      ProfilePageController profileController,
+      int index,
+      AsyncSnapshot<void> snapshot) {
     return Center(
       child: Stack(
         children: [
@@ -189,7 +190,8 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: GestureDetector(
               onTap: () {
-                controller.joinLiveStream(controller.ListLiveStream[index]['Liveid']);
+                controller
+                    .joinLiveStream(controller.ListLiveStream[index]['Liveid']);
               },
               child: controller.ListLiveStream.length >= 1
                   ? Container(
@@ -202,63 +204,68 @@ class HomePage extends StatelessWidget {
                       child: Stack(
                         children: [
                           controller.ListLiveStream[index]['avatar'] != null &&
-                                controller.ListLiveStream[index]['avatar'].isNotEmpty
-                            ? (controller.ListLiveStream[index]['avatar'].startsWith('http')
-                                ? ClipRRect(
+                                  controller.ListLiveStream[index]['avatar']
+                                      .isNotEmpty
+                              ? (controller.ListLiveStream[index]['avatar']
+                                      .startsWith('http')
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.network(
+                                        controller.ListLiveStream[index]
+                                            ['avatar'],
+                                        fit: BoxFit.fitHeight,
+                                        height: 800,
+                                        errorBuilder: (context, error,
+                                                stackTrace) =>
+                                            const Icon(Icons.error, size: 20),
+                                      ),
+                                    )
+                                  : (() {
+                                      final file = File(controller
+                                          .ListLiveStream[index]['avatar']);
+                                      return file.existsSync()
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: Image.file(file,
+                                                  fit: BoxFit.fill))
+                                          : const Icon(Icons.error, size: 20);
+                                    })())
+                              : ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: Image.network(
-                                      controller.ListLiveStream[index]['avatar'],
-                                      fit: BoxFit.fitHeight,
-                                      height: 800,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                         const  Icon(Icons.error, size: 20),
-                                    ),
-                                )
-                                : (() {
-                                    final file = File(controller.ListLiveStream[index]['avatar']);
-                                    return file.existsSync()
-                                        ? ClipRRect(
-                                          borderRadius: BorderRadius.circular(20),
-                                          child: Image.file(file, fit: BoxFit.fill))
-                                        : const Icon(Icons.error, size: 20);
-                                  })())
-                            : ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                  "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg",
-                                  fit: BoxFit.fill,
+                                    "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg",
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
+                          Positioned(
+                            child: Obx(
+                              () => controller.isLive.value
+                                  ? Center(
+                                      child: Lottie.asset(
+                                          "assets/images/stream.json"))
+                                  : Center(
+                                      child: Image.asset(
+                                          "assets/images/stream-offline.jpg")),
                             ),
-                          Positioned(child:
-                          Obx(
-                          () => controller.isLive.value
-                              ? Center(
-                                  child: Lottie.asset("assets/images/stream.json")
-                                )
-                              : Center(
-                                  child: Image.asset("assets/images/stream-offline.jpg")
-                                ),
-                        ),
-                           )
+                          )
                         ],
-                        
                       ),
                     )
-                    :  Center(
-                      child:
-                       Lottie.asset("assets/images/nolive.json",height: 200)
-                    ),
-                  
+                  : Center(
+                      child: Lottie.asset("assets/images/nolive.json",
+                          height: 200)),
             ),
           ),
-          
           Positioned(
             top: 30,
             right: 20,
-            child: MaterialButton(onPressed: () {
-              Future.delayed(Duration(seconds: 5));
-              controller.checkFollower(controller.ListLiveStream[index]['Email']);
-            },
+            child: MaterialButton(
+              onPressed: () {
+                Future.delayed(Duration(seconds: 5));
+                controller
+                    .checkFollower(controller.ListLiveStream[index]['Email']);
+              },
               child: Container(
                 height: 30,
                 width: 90,
@@ -267,52 +274,58 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
-                  child: controller.followersOfUser!.containsKey(controller.emailCurrentUser) 
-                && controller.followersOfUser![controller.emailCurrentUser] ==true? 
-                 const Text("unfollow"): const Text("follow")),
+                    child: controller.followersOfUser!
+                                .containsKey(controller.emailCurrentUser) &&
+                            controller.followersOfUser![
+                                    controller.emailCurrentUser] ==
+                                true
+                        ? const Text("unfollow")
+                        : const Text("follow")),
               ),
             ),
           ),
           Positioned(
             left: 7,
             top: 25,
-              child: GestureDetector(
-                onTap: ()async{
-                  String email = controller.ListLiveStream[index]['Email'] ?? 'none';
-                  await controller.fetchUserWithProducts(email);
-                  controller.GoToProfileProductInfo(controller.UserWithProduct);
-                },
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    shape: BoxShape.circle,
-                  ),
-                  child:ClipOval(
-                    child: controller.ListLiveStream[index]['avatar'] != null &&
-                                controller.ListLiveStream[index]['avatar'].isNotEmpty
-                            ? (controller.ListLiveStream[index]['avatar'].startsWith('http')
-                                ? Image.network(
-                                    controller.ListLiveStream[index]['avatar'],
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                       const  Icon(Icons.error, size: 20),
-                                  )
-                                : (() {
-                                    final file = File(controller.ListLiveStream[index]['avatar']);
-                                    return file.existsSync()
-                                        ? Image.file(file, fit: BoxFit.cover)
-                                        : const Icon(Icons.error, size: 20);
-                                  })())
-                            : Image.network(
-                                "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                  ),
+            child: GestureDetector(
+              onTap: () async {
+                String email =
+                    controller.ListLiveStream[index]['Email'] ?? 'none';
+                await controller.fetchUserWithProducts(email);
+                controller.GoToProfileProductInfo(controller.UserWithProduct);
+              },
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  shape: BoxShape.circle,
+                ),
+                child: ClipOval(
+                  child: controller.ListLiveStream[index]['avatar'] != null &&
+                          controller.ListLiveStream[index]['avatar'].isNotEmpty
+                      ? (controller.ListLiveStream[index]['avatar']
+                              .startsWith('http')
+                          ? Image.network(
+                              controller.ListLiveStream[index]['avatar'],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.error, size: 20),
+                            )
+                          : (() {
+                              final file = File(
+                                  controller.ListLiveStream[index]['avatar']);
+                              return file.existsSync()
+                                  ? Image.file(file, fit: BoxFit.cover)
+                                  : const Icon(Icons.error, size: 20);
+                            })())
+                      : Image.network(
+                          "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg",
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
-            
+            ),
           ),
           Positioned(
             top: 28,
@@ -335,4 +348,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-

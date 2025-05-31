@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "911088896171",
-    "project_id": "shoponline-44470",
-    "storage_bucket": "shoponline-44470.appspot.com"
+    "project_number": "205575767859",
+    "project_id": "shoponlineapp-9d5a8",
+    "storage_bucket": "shoponlineapp-9d5a8.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:911088896171:android:64e6f454b391ee77018fee",
+        "mobilesdk_app_id": "1:205575767859:android:b9b46039e8271c57b82046",
         "android_client_info": {
-          "package_name": "com.example.live_app"
+          "package_name": "com.example.shop_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "911088896171-c7tvdcu8t5rrgqsv2l2qscp34b47cj7p.apps.googleusercontent.com",
+          "client_id": "205575767859-3pa5dinpuc5nnc2g7unln1js7mpivbb9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shop_app",
+            "certificate_hash": "c85ea78292e9dd538affaa38dc6bbbc74bd98f6c"
+          }
+        },
+        {
+          "client_id": "205575767859-g0ilcc9600sq6h6hi8vgf1ur6e5vtfgt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCZeR8MShJOxUaxnrGi9lgrjcUJdQrFBM4"
+          "current_key": "AIzaSyDX7mW0zJ9vTqKD_WptYeyjq67-qHdTdoc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "911088896171-c7tvdcu8t5rrgqsv2l2qscp34b47cj7p.apps.googleusercontent.com",
+              "client_id": "205575767859-g0ilcc9600sq6h6hi8vgf1ur6e5vtfgt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

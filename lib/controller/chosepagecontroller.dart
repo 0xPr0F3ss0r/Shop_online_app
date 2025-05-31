@@ -12,8 +12,6 @@ class chosePageController extends GetxController {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   String userId = FirebaseAuth.instance.currentUser!.uid;
   OnClickAsSeller() async {
-    print("user id: $userId");
-   
     DocumentReference docRef = users.doc(userId);
     try {
       final docSnapshot = await docRef.get();
@@ -27,9 +25,9 @@ class chosePageController extends GetxController {
         services.sharedpreferences.setString("step", "4");
         Get.offAllNamed(AppRoute.chosepageforseller);
       } else {
-        print("docsnapshot doesn't exists ###################################");
         // Document does not exist, create a new one
-        Get.snackbar("fails", "try again , no data found for this user", colorText: Colors.red);
+        Get.snackbar("fails", "try again , no data found for this user",
+            colorText: Colors.red);
       }
     } catch (e) {
       Get.snackbar("fail", "fails to login as -SELLER-  $e",
@@ -55,7 +53,8 @@ class chosePageController extends GetxController {
         Get.offAllNamed(AppRoute.navigation);
       } else {
         // Document does not exist, create a new one
-        Get.snackbar("fails", "try again, no data found for this user", colorText: Colors.red);
+        Get.snackbar("fails", "try again, no data found for this user",
+            colorText: Colors.red);
       }
     } catch (e) {
       Get.snackbar("fail", "fails to login as -SELLER-  $e",

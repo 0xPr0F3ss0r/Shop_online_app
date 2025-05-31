@@ -30,13 +30,13 @@ validate(String val, int min, int max, String type) {
   if (type == "username" && !GetUtils.isUsername(val)) {
     return "Not a valid username";
   }
-  // if (type == "size" && !GetUtils.is(val)) {
-  //   return "Not a valid size should be a number";
-  //   }
-    if (type == "location" && val.isEmpty) {
+  if (type == "location" && val.isEmpty) {
     return "Location cannot be empty";
   } else if (type == "location" && !isValidLocation(val)) {
     return "Not a valid location";
+  }
+  if (type == "productName" && GetUtils.isNumericOnly(val)) {
+    return "Not a valid product";
   }
 
   if (type == "password") {
@@ -46,8 +46,8 @@ validate(String val, int min, int max, String type) {
       return "Password must include uppercase, lowercase, and number";
     }
   }
-  if (type == "cvv"){
-    if(val.length != 3 && !val.isNumericOnly){
+  if (type == "cvv") {
+    if (val.length != 3 && !val.isNumericOnly) {
       return "write your cvv";
     }
   }

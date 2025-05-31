@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/controller/EditProductController.dart';
@@ -8,8 +9,10 @@ import 'package:live_app/view/profile/EditProductsPage.dart';
 
 class Vviewproductspage extends StatelessWidget {
   final ProfilePageController controller = Get.put(ProfilePageController());
-  final Viewproductscontroller viewproductscontroller = Get.put(Viewproductscontroller());
-  final EditProductController editProductController = Get.put(EditProductController());
+  final Viewproductscontroller viewproductscontroller =
+      Get.put(Viewproductscontroller());
+  final EditProductController editProductController =
+      Get.put(EditProductController());
   Vviewproductspage({super.key});
 
   @override
@@ -17,12 +20,20 @@ class Vviewproductspage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[900], // Dark background for contrast
       appBar: AppBar(
-        title: const Text(
-          "View Products",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        title: AnimatedTextKit(
+          pause: const Duration(seconds: 1),
+          animatedTexts: [
+            WavyAnimatedText(
+              "View Products",
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+          isRepeatingAnimation: true,
+          repeatForever: true,
+          totalRepeatCount: 5,
         ),
         centerTitle: true,
         backgroundColor: Colors.deepPurpleAccent, // Vibrant app bar color
@@ -58,34 +69,27 @@ class Vviewproductspage extends StatelessWidget {
                   final imagePath = product['productImage'] ?? '';
                   final price = product['productPrice'] ?? '0';
                   final brand = product['productBrand'] ?? 'No Brand';
-
+                  final productID = product['productID'] ?? 'no id';
                   return Card(
                     elevation: 5, // Add shadow
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15), // Rounded corners
+                      borderRadius:
+                          BorderRadius.circular(15), // Rounded corners
                     ),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(15),
                       onTap: () {
                         // Navigate to product details page
-                        Get.to( UpdateProducts(),arguments: {
-                          "email": product['profileEmail'] ?? 'N/A',
-                          "profile image": product['profileImage'] ?? 'N/A',
-                          "profile name": product['profileName'] ?? 'N/A',
-                          "active since": product['active since'] ?? 'N/A',
-                          "followers": product['profileFollowers'] ?? 'N/A',
-                          'phone': product['profilePhone'] ?? 'N/A',
-                          "website": product['profileWebsite'] ?? 'N/A',
-                          "location": product['Location'] ?? 'N/A',
-                          "productsBrand": product['productBrand'] ?? 'N/A',
-                          "productSize": product['productBrandSize'] ?? 'N/A',
-                          "productPrice": product['productPrice'] ?? 'N/A',
-                          "productColor": product['productColor'] ?? 'N/A',
-                          "productType": product['productType'] ?? 'N/A',
-                          "productImage": product['productImage'] ?? 'N/A',
-                          "products": product ?? 'N/A',
-                          "all products": product['userProduct'] ?? 'N/A',
-                        });
+                        Map<String, dynamic> products = {
+                          'product type': product['productType'],
+                          'product Brand': product['productBrand'],
+                          'product size': product['productBrandSize'],
+                          'product Image': product['productImage'],
+                          'product color': product['productColor'],
+                          "product Price": product['productPrice'],
+                          "productID": product['productID'],
+                        };
+                        Get.to(UpdateProducts(), arguments: products);
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +103,8 @@ class Vviewproductspage extends StatelessWidget {
                               child: FutureBuilder<bool>(
                                 future: File(imagePath).exists(),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return const Center(
                                       child: CircularProgressIndicator(),
                                     );
@@ -109,7 +114,8 @@ class Vviewproductspage extends StatelessWidget {
                                       imagePath,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
                                         return Image.network(
                                           "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg", // Placeholder image
                                           fit: BoxFit.cover,
@@ -161,33 +167,48 @@ class Vviewproductspage extends StatelessWidget {
                           ),
                           // Edit and Delete Buttons
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.blue),
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.blue),
                                   onPressed: () {
-                                    Map<String, dynamic> products = {
-                                      'product type': product['productType'],
-                                      'product Brand': product['productBrand'],
-                                      'product size': product['productBrandSize'],
-                                      'product Image': product['productImage'],
-                                      'product color': product['productColor'],
-                                      "product Price": product['productPrice'],
-                                    };
-                                    Get.to(UpdateProducts(), arguments: products);
+                                    try {
+                                      Map<String, dynamic> products = {
+                                        'product type':
+                                            product['productType'] ?? "empty",
+                                        'product Brand':
+                                            product['productBrand'] ?? "empty",
+                                        'product size':
+                                            product['productBrandSize'] ??
+                                                "empty",
+                                        'product Image':
+                                            product['productImage'] ?? "empty",
+                                        'product color':
+                                            product['productColor'] ?? "empty",
+                                        "product Price":
+                                            product['productPrice'] ?? "empty",
+                                        "productID":
+                                            product['productID'] ?? "empty"
+                                      };
+                                      Get.to(() => UpdateProducts(),
+                                          arguments: products);
+                                    } catch (e) {
+                                      Get.snackbar("error",
+                                          "error,please try again later",
+                                          colorText: Colors.red);
+                                    }
                                   },
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
                                   onPressed: () {
                                     viewproductscontroller.deleteProduct(
-                                      product['productBrand'],
-                                      product['productPrice'],
-                                      product['productType'],
-                                      context,
-                                    );
+                                        context, product['productID']);
                                   },
                                 ),
                               ],

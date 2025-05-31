@@ -12,6 +12,7 @@ import 'package:live_app/view/login/reset-password.dart';
 import 'package:live_app/view/onboarding/CustomSlider.dart';
 import 'package:live_app/view/payment/paymentPage.dart';
 import 'package:live_app/view/profile/Editprofilepage.dart';
+import 'package:live_app/view/profile/profileOfUser.dart';
 
 List<GetPage<dynamic>> routes = [
   GetPage(
@@ -40,6 +41,7 @@ List<GetPage<dynamic>> routes = [
     name: AppRoute.resetpassword,
     page: () => ResetPassword(),
   ),
+  GetPage(name: AppRoute.ProfileOfUser, page: () => ProfileOfUser()),
   GetPage(
     name: AppRoute.changepassword,
     page: () => ChangePassword(),
@@ -52,9 +54,7 @@ List<GetPage<dynamic>> routes = [
     name: AppRoute.chosepageforseller,
     page: () => Chosepageforseller(),
   ),
-  GetPage(
-    name: AppRoute.payment,
-    page: () => Payment()),
+  GetPage(name: AppRoute.payment, page: () => Payment()),
   // Additional routes can be uncommented and used as needed.
   // GetPage(name: AppRoute.SignUp, page: () => Signup()),
   // GetPage(name: AppRoute.ForgetPassword, page: () => Forgetpassword()),

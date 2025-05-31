@@ -17,15 +17,15 @@ class profileOfProductUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic>? profileinfo = Get.arguments;
-    String profileImage = profileinfo!['profile image'] ??
+    String profileImage = profileinfo?['avatar'] ??
         'https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg';
-    String profileName = profileinfo['profile name'] ?? 'Unknown';
-    String email = profileinfo['email'] ?? '';
-    String phone = profileinfo['phone'] ?? '';
-    String website = profileinfo['website'] ?? '';
-    String location = profileinfo['location'] ?? '';
-    List<Map<String, dynamic>> products = profileinfo['all products'] ?? [];
-    
+    String profileName = profileinfo?['userName'] ?? 'Unknown';
+    String email = profileinfo?['email'] ?? '';
+    String phone = profileinfo?['phone'] ?? '';
+    String website = profileinfo?['website'] ?? '';
+    String location = profileinfo?['location'] ?? '';
+    List<Map<String, dynamic>> products = profileinfo?['all products'] ?? [];
+
     return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -40,9 +40,9 @@ class profileOfProductUser extends StatelessWidget {
           centerTitle: true,
         ),
         body: RefreshIndicator(
-           onRefresh: () async {
-          await controller.GetNumberOfFollowers();
-        },
+          onRefresh: () async {
+            await controller.GetNumberOfFollowers();
+          },
           child: SingleChildScrollView(
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -53,7 +53,8 @@ class profileOfProductUser extends StatelessWidget {
                         child: Stack(
                           children: [
                             CircleAvatar(
-                              backgroundColor: const Color.fromARGB(255, 6, 59, 101),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 6, 59, 101),
                               radius: 115,
                               child: CircleAvatar(
                                 backgroundColor: Colors.blue,
@@ -112,37 +113,42 @@ class profileOfProductUser extends StatelessWidget {
                       )),
                     ),
                     const SizedBox(height: 5),
-                   // Container(width: 400,height: 300,child: Obx(()=> Text("${email}")),),
-                    Obx(()
-                      => controller.emailuser.value != email?
-                        MaterialButton(
-                          onPressed: () {
-                            Future.delayed(const Duration (seconds: 5));
-                             controller.checkFollower(email);
-                            
-                          },
-                          child: Container(
-                            width: 200,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(20),
+                    Obx(
+                      () => controller.emailuser.value != email
+                          ? GestureDetector(
+                              onTap: () async {
+                                controller.checkFollower(email);
+                              },
+                              onDoubleTap: () {},
+                              child: Container(
+                                  width: 200,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                    child: GetBuilder<
+                                        profileOfProductUserController>(
+                                      builder: (controller) {
+                                        final isFollowing =
+                                            controller.isFollowMap?[
+                                                    controller.emailuser] ==
+                                                true;
+                                        return Text(
+                                          isFollowing ? "unfollow" : "follow",
+                                          style: const TextStyle(
+                                              color: Colors.black),
+                                        );
+                                      },
+                                    ),
+                                  )),
+                            )
+                          : const Text(
+                              "profile view",
+                              style: TextStyle(color: Colors.blue),
                             ),
-                            child: Center(
-                                child: Obx(
-                              () =>  controller.isFollowMap!.containsKey(controller.emailuser.value) 
-                && controller.isFollowMap![controller.emailuser.value] ==true?const Text(
-                               "unfollow",
-                                style: TextStyle(color: Colors.black),
-                              ):const Text(
-                               "follow",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            )),
-                          ),
-                        ):const Text("profile view",style: TextStyle(color: Colors.blue),),
                     ),
-                    
                     const SizedBox(height: 10),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -162,17 +168,18 @@ class profileOfProductUser extends StatelessWidget {
                           title: const Text("Email",
                               style: TextStyle(color: Colors.white)),
                           trailing: Text(email,
-                              style:
-                                  const TextStyle(color: Colors.white, fontSize: 15))),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 15))),
                     ),
                     Card(
                       color: Colors.black,
                       child: ListTile(
                         leading: const Icon(Icons.phone),
-                        title:
-                            const Text("Phone", style: TextStyle(color: Colors.white)),
+                        title: const Text("Phone",
+                            style: TextStyle(color: Colors.white)),
                         trailing: Text(phone,
-                            style: const TextStyle(color: Colors.white, fontSize: 15)),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 15)),
                       ),
                     ),
                     Card(
@@ -182,8 +189,8 @@ class profileOfProductUser extends StatelessWidget {
                           title: const Text("Website",
                               style: TextStyle(color: Colors.white)),
                           trailing: Text(website,
-                              style:
-                                  const TextStyle(color: Colors.white, fontSize: 15))),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 15))),
                     ),
                     Card(
                       color: Colors.black,
@@ -192,8 +199,8 @@ class profileOfProductUser extends StatelessWidget {
                           title: const Text("Location",
                               style: TextStyle(color: Colors.white)),
                           trailing: Text(location,
-                              style:
-                                  const TextStyle(color: Colors.white, fontSize: 15))),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 15))),
                     ),
                     const SizedBox(height: 15),
                     Container(
@@ -227,8 +234,8 @@ class profileOfProductUser extends StatelessWidget {
                             children: [
                               Text(
                                 "product number ${index + 1}",
-                                style:
-                                    const TextStyle(color: Colors.white, fontSize: 18),
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 18),
                               ),
                               const Divider(color: Colors.black),
                               const SizedBox(height: 3),
@@ -264,7 +271,8 @@ class profileOfProductUser extends StatelessWidget {
                                   text: "product size: ",
                                   children: [
                                     TextSpan(
-                                        text: products[index]['productBrandSize'],
+                                        text: products[index]
+                                            ['productBrandSize'],
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white))
@@ -272,41 +280,36 @@ class profileOfProductUser extends StatelessWidget {
                               const Divider(color: Colors.black),
                               const SizedBox(height: 3),
                               Text.rich(TextSpan(
-                                style: const TextStyle(
-                                  fontSize: 18,color: Colors.black),
+                                  style: const TextStyle(
+                                      fontSize: 18, color: Colors.black),
                                   text: "product color: ",
                                   children: [
                                     TextSpan(
-                                      text:products[index]['productColor'],
-                                      style:const TextStyle(
+                                        text: products[index]['productColor'],
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white)
-                                    )
-                                  ]
-                                )
-                              ),
+                                            color: Colors.white))
+                                  ])),
                               const Divider(color: Colors.black),
                               const SizedBox(height: 3),
                               Text.rich(TextSpan(
-                                style: const TextStyle(
-                                  fontSize: 18,color: Colors.black),
+                                  style: const TextStyle(
+                                      fontSize: 18, color: Colors.black),
                                   text: "product price: ",
                                   children: [
                                     TextSpan(
-                                      text:products[index]['productPrice'],
-                                      style:const TextStyle(
+                                        text: products[index]['productPrice'],
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white)
-                                    )
-                                  ]
-                                )
-                              ),
+                                            color: Colors.white))
+                                  ])),
                               const Divider(color: Colors.black),
                               const SizedBox(height: 5),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                    width: 300, products[index]['productImage']),
+                                    width: 300,
+                                    products[index]['productImage']),
                               ),
                             ],
                           ),

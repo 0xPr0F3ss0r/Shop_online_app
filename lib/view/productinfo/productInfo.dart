@@ -1,9 +1,13 @@
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/constant/route.dart';
 import 'package:live_app/controller/productinfoController.dart';
+import 'package:live_app/controller/profileOfUser.dart';
 import 'package:live_app/controller/profilepagecontroller.dart';
 import 'package:live_app/view/payment/paypale.dart';
+import 'package:live_app/view/profile/profileOfProductUser.dart';
+import 'package:live_app/view/profile/profileOfUser.dart';
 import 'package:live_app/view/widget/TextFormField.dart';
 
 // ignore: must_be_immutable
@@ -20,19 +24,19 @@ class Productinfo extends StatelessWidget {
     String productImage = productinfo['productImage'] ??
         "https://www.pinterest.com/pin/19281104650773307/";
     String email = productinfo['email'].toString().isEmpty
-        ? 'no email'
+        ? 'empty'
         : productinfo['email'];
     String productBrand = productinfo['productsBrand'].toString().isEmpty
-        ? 'no product brand'
+        ? 'empty'
         : productinfo['productsBrand'];
     String productSize = productinfo['productSize'].toString().isEmpty
-        ? 'no product size'
+        ? 'empty'
         : productinfo['productSize'];
     String productsPrice = productinfo['productPrice'].toString().isEmpty
-        ? 'no product price'
+        ? 'empty'
         : productinfo['productPrice'];
     String productcolor = productinfo['productColor'].toString().isEmpty
-        ? 'no product color'
+        ? 'empty'
         : productinfo['productColor'];
     List size = productSize.split(",").toList();
 
@@ -93,7 +97,12 @@ class Productinfo extends StatelessWidget {
                     width: 200,
                   ),
                   GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        controller.GoToProfileProductInfo(email);
+                        // print(controller.UserWithProduct);
+                        // Get.to(() => profileOfProductUser(),
+                        //     arguments: controller.UserWithProduct);
+                      },
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: CircleAvatar(

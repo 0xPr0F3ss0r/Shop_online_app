@@ -11,13 +11,13 @@ class Mymidellware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final step = myServices.sharedpreferences.getString("step");
-    print("step is $step");
+    final user_found = myServices.sharedpreferences.getBool("user found");
 
     // Check the step and current route to avoid redundant navigation
     if (step == null && route != AppRoute.OnboardingPage) {
       return const RouteSettings(name: AppRoute.OnboardingPage);
     }
-    if (step == "2" && route != AppRoute.chosepage) {
+    if (step == "2" && user_found != true && route != AppRoute.chosepage) {
       return const RouteSettings(name: AppRoute.chosepage);
     }
     if (step == "3" && route != AppRoute.navigation) {
@@ -29,7 +29,7 @@ class Mymidellware extends GetMiddleware {
     if (step == "4" && route != AppRoute.chosepageforseller) {
       return const RouteSettings(name: AppRoute.chosepageforseller);
     }
-    if (step == "5" && route != AppRoute.navigation) {
+    if (step == "5" && user_found == true && route != AppRoute.navigation) {
       return const RouteSettings(name: AppRoute.navigation);
     }
     return null;

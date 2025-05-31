@@ -9,7 +9,6 @@ import 'package:live_app/core/auth_services.dart';
 import 'package:live_app/core/services/services.dart';
 import 'package:live_app/users/user_repository.dart';
 
-
 class Mycontroller extends GetxController {
   UserRepository userrepo = Get.put(UserRepository());
   void onlogin(BuildContext context) {}
@@ -31,7 +30,7 @@ class MyLoginController extends Mycontroller {
   String? name;
   String? emailuser;
   String? uid;
-  
+
   var type;
   void onstart() {
     userdata = auth.MyuserData;
@@ -65,7 +64,7 @@ class MyLoginController extends Mycontroller {
   Future<void> checkEmailVerified() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await user.reload(); 
+      await user.reload();
       if (user.emailVerified) {
         Get.snackbar(
           "Email Verified",
@@ -90,13 +89,11 @@ class MyLoginController extends Mycontroller {
               if (data != null && data.containsKey('type of user')) {
                 var type = data['type of user'];
                 if (type == null || type.isEmpty) {
-                
                   Get.snackbar("Success", "Login successfully",
                       colorText: Colors.blue);
                   myservices.sharedpreferences.setString("step", "2");
                   Get.offAllNamed(AppRoute.chosepage);
                 } else {
-                  
                   Get.snackbar("Success", "Login successfully",
                       colorText: Colors.blue);
                   myservices.sharedpreferences.setString("step", "5");
@@ -104,28 +101,21 @@ class MyLoginController extends Mycontroller {
                 }
               } else {
                 Get.snackbar("Success", "Login successfully",
-                      colorText: Colors.blue);
+                    colorText: Colors.blue);
                 myservices.sharedpreferences.setString("step", "2");
                 Get.offAllNamed(AppRoute.chosepage);
               }
             } catch (e) {
-              Get.snackbar("Error","$e",colorText: Colors.red);
+              Get.snackbar("Error", "$e", colorText: Colors.red);
             }
           } else {
-           
             Get.snackbar("fails", "ERROR login , please try again");
           }
         } else {
-         
           Get.snackbar("Fails", "Error Login Try re-login again or register",
               colorText: Colors.red);
         }
-
-        // Example: Navigate to home page
-
-        //update();
       } else {
-        
         Get.snackbar(
           "Email Not Verified",
           "Please check your inbox and verify your email.",
@@ -166,7 +156,7 @@ class MyLoginController extends Mycontroller {
         logintime = 5;
         update();
       }
-     
+
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
@@ -175,22 +165,18 @@ class MyLoginController extends Mycontroller {
         autoCloseDuration: const Duration(seconds: 3),
         showConfirmBtn: false,
       );
-      await
-          //Get.snackbar("hello","any",snackPosition: SnackPosition.TOP);
-          Get.snackbar(
-              "Error", "Login failed , check your email or your password",
-              colorText: Colors.red, duration: Duration(seconds: 2));
+      await Get.snackbar(
+          "Error", "Login failed , check your email or your password",
+          colorText: Colors.red, duration: Duration(seconds: 2));
     }
     super.onlogin(context);
   }
 
   @override
-  void Ongooglelogin()async {
+  void Ongooglelogin() async {
     auth.OngoogleSignUpfunc();
     super.Ongooglelogin();
   }
-
-
 
   @override
   void onInit() async {
@@ -210,6 +196,4 @@ class MyLoginController extends Mycontroller {
     update();
     super.clear();
   }
-
-
 }

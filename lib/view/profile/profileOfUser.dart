@@ -11,9 +11,9 @@ class ProfileOfUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String name = controller.name?? "name not found";
-    String email = controller.email?? "email not found";
-    String profilepictureurl = controller.pictureUrl!;
+    String name = controller.name ?? "name not found";
+    String email = controller.email ?? "email not found";
+    String? profilepictureurl = controller.pictureUrl;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -55,14 +55,16 @@ class ProfileOfUser extends StatelessWidget {
                           radius: 50,
                           backgroundColor: Colors.white,
                           // ignore: unnecessary_null_comparison
-                          child:profilepictureurl == null?
-                              const Icon(Icons.person, size: 60, color: Colors.blue):Image.asset("assets/images/default_avatar.png"),
+                          child: profilepictureurl == null
+                              ? const Icon(Icons.person,
+                                  size: 60, color: Colors.blue)
+                              : Image.asset("assets/images/default_avatar.png"),
                         ),
                       ),
                     ),
                   ),
                 ),
-                 Positioned(
+                Positioned(
                   top: 50,
                   left: 0,
                   right: 0, // Center horizontally
@@ -301,82 +303,117 @@ class ProfileOfUser extends StatelessWidget {
                     ),
                   ),
                 ),
-                 Positioned(
-                  top: 450,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20,top: 30),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.email_outlined,color: Colors.blue,size: 35,),
-                        const SizedBox(width: 10),
-                        Text(email,style: const TextStyle(color: Colors.black),)
-                      ],
-                    ),
-                  )),
-                  const Positioned(
-                  top: 450,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 20,top: 70),
-                    child: Row(
-                      children: [
-                        Icon(Icons.cake,color: Colors.blue,size: 35,),
-                        SizedBox(width: 10),
-                        Text("March, 15, 1993",style: TextStyle(color: Colors.black),)
-                      ],
-                    ),
-                  )),
-                  // const Positioned(
-                  // top: 450,
-                  // child: Padding(
-                  //   padding: EdgeInsets.only(left: 20,top: 30),
-                  //   child: Row(
-                  //     children: [
-                  //       Icon(Icons.email_outlined,color: Colors.orange,size: 35,),
-                  //       SizedBox(width: 10),
-                  //       Text("hani_kr@gmail.com",style: TextStyle(color: Colors.black),)
-                  //     ],
-                  //   ),
-                  // )),
-                  Positioned(
+                Positioned(
+                    top: 450,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 30),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.email_outlined,
+                            color: Colors.blue,
+                            size: 35,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            email,
+                            style: const TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
+                    )),
+                const Positioned(
+                    top: 450,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20, top: 70),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.cake,
+                            color: Colors.blue,
+                            size: 35,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "March, 15, 1993",
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
+                    )),
+                // const Positioned(
+                // top: 450,
+                // child: Padding(
+                //   padding: EdgeInsets.only(left: 20,top: 30),
+                //   child: Row(
+                //     children: [
+                //       Icon(Icons.email_outlined,color: Colors.orange,size: 35,),
+                //       SizedBox(width: 10),
+                //       Text("hani_kr@gmail.com",style: TextStyle(color: Colors.black),)
+                //     ],
+                //   ),
+                // )),
+                Positioned(
                     top: 600,
                     left: 100,
                     child: Container(
-                      width: 180,
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.all(Radius.circular(20))
-                      ),
-                      child: MaterialButton(
-                        child: const Text("Follow",style: TextStyle(color: Colors.white),),
-                        onPressed: () {}))),
-                        const Positioned(
-                          top: 680,
-                          left: 10,
+                        width: 180,
+                        decoration: const BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: MaterialButton(
+                            child: const Text(
+                              "Follow",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {}))),
+                const Positioned(
+                    top: 680,
+                    left: 10,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 30),
                           child: Row(
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 30),
-                                child: Row(
-                                  children: [
-                                    Text("Follow me on",style: TextStyle(color: Color.fromARGB(255, 12, 34, 52)),),
-                                    SizedBox(width: 5,),
-                                    FaIcon(FontAwesomeIcons.twitter,color: Color.fromARGB(255, 12, 34, 52),)
-                                  ],
-                                ),
+                              Text(
+                                "Follow me on",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 12, 34, 52)),
                               ),
-                              SizedBox(width: 50),
-                              Padding(
-                                padding: EdgeInsets.only(right: 30),
-                                child: Row(
-                                  children: [
-                                    Text("Follow me on",style: TextStyle(color: Color.fromARGB(255, 12, 34, 52)),),
-                                    SizedBox(width: 5,),
-                                    FaIcon(FontAwesomeIcons.instagram,color: Color.fromARGB(255, 12, 34, 52),)
-                                  ],
-                                ),
+                              SizedBox(
+                                width: 5,
                               ),
+                              FaIcon(
+                                FontAwesomeIcons.twitter,
+                                color: Color.fromARGB(255, 12, 34, 52),
+                              )
                             ],
-                          ))
+                          ),
+                        ),
+                        SizedBox(width: 50),
+                        Padding(
+                          padding: EdgeInsets.only(right: 30),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Follow me on",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 12, 34, 52)),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              FaIcon(
+                                FontAwesomeIcons.instagram,
+                                color: Color.fromARGB(255, 12, 34, 52),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ))
               ],
             ),
             // Add more widgets here for the rest of the profile page

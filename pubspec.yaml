@@ -62,6 +62,7 @@ dependencies:
   flutter_paypal: ^0.2.1
   animate_gradient: ^0.0.3
   animated_text_kit: ^4.2.3
+  flutter_dotenv: ^5.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -71,6 +72,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/images/error_image.jpg
     - assets/onboarding/onb1.PNG
     - assets/onboarding/onb2.PNG

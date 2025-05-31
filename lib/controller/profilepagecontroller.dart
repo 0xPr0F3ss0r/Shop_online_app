@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -19,8 +18,6 @@ class ProfilePageController extends GetxController {
   TextEditingController BrandColor = TextEditingController();
   TextEditingController BrandPrice = TextEditingController();
 
-
- 
   int? followers;
   String? downloadUrl;
   String? downloadUrlProduct;
@@ -39,26 +36,28 @@ class ProfilePageController extends GetxController {
   String? productBrandSize = '';
   String? productBrandColor = '';
   String? type;
- 
 
   int Products = 1;
   bool isLoding = false;
   File? selectedImageForProduct;
   XFile? myimage;
   int first = 1;
-  int ProductsNumber= 0;
+  int ProductsNumber = 0;
   String avatarDefault =
       "https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59094701-stock-illustration-businessman-profile-icon.jpg";
   final AuthService _authRepo = Get.put(AuthService());
   final UserRepository _userRepo = Get.put(UserRepository());
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late CollectionReference users;
   final User? user = FirebaseAuth.instance.currentUser;
   List<Map<String, dynamic>> products = [];
   @override
-  void onInit() async{
+  void onInit() async {
     super.onInit();
+    users = _firestore.collection('users');
     await fetchUserData(); // Fetch user data when the controller is initialized
     await fetchUserProducts();
+    isLoding = false;
     //fetchProductDetails();
   }
 
@@ -71,71 +70,62 @@ class ProfilePageController extends GetxController {
     productType = "T-Cheart";
     update();
   }
-  
- 
+
   //fetchUserProducts
   Future<List<Map<String, dynamic>>> fetchUserProducts() async {
-    
-  try {
-    String uid = user!.uid;
-    // Fetch the user document
-    final snapshot = await _firestore.collection("users").doc(uid).get();
-
-    // Clear the list before adding new data
-    products.clear();
-
-    // Check if the document exists
-    if (snapshot.exists) {
-      Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
-      // Iterate over the user data to find product-related fields
-      userData.forEach((key, value) {
-        if (key.startsWith("product of user") && value is Map<String, dynamic>) {
-          products.add({
-            "productImage": value["productImage"] ?? "",
-            "productBrand": value["productBrand"] ?? "",
-            "productType": value["productType"] ?? "",
-            "productBrandSize": value["productBrandSize"] ?? "",
-            "productPrice": value["productPrice"] ?? "",
-            "productColor":  value["productBrandColor"] ?? "",
-          });
-        }
-      });
+    try {
+      String uid = user!.uid;
+      // Fetch the user document
+      final snapshot = await _firestore.collection("users").doc(uid).get();
+      // Clear the list before adding new data
+      products.clear();
+      // Check if the document exists
+      if (snapshot.exists) {
+        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+        userData.forEach((key, value) {
+          if (key.contains("product_of_user ")) {
+            Map<String, dynamic> myvalue = value as Map<String, dynamic>;
+            myvalue.forEach((key_product, value_product) {
+              products.add({
+                "productImage": value_product["productImage"] ?? "",
+                "productBrand": value_product["productBrand"] ?? "",
+                "productType": value_product["productType"] ?? "",
+                "productBrandSize": value_product["productBrandSize"] ?? "",
+                "productPrice": value_product["productPrice"] ?? "",
+                "productColor": value_product["productBrandColor"] ?? "",
+                "productID": key_product,
+              });
+            });
+          }
+        });
+        update(); // Notify listeners that the data has changed
+        return products;
+      }
+      // If snapshot does not exist, return empty list
+      return [];
+    } catch (e) {
+      Get.snackbar("Error", "Error fetching users with products: $e");
+      return [];
     }
-    update(); // Notify listeners that the data has changed
-    return products;
-  } catch (e) {
-    Get.snackbar("Error", "Error fetching users with products: $e");
-    return [];
   }
-}
-//   Future<void> DeleteProductFromFirebase() async {
-//   try {
-//     String UID = user!.uid; // Get current user's UID
-//     DocumentReference<Map<String, dynamic>> docRef = _firestore.collection("users").doc(UID);
-    
-//     // Use dot notation to delete the entire map for a specific product
-//     final updates = <String, dynamic>{
-//       "product of user ${Products-1}": FieldValue.delete(),
-//     };
-//     await docRef.update(updates);
-//     Get.snackbar("Success", "Products deleted successfully",
-//           colorText: Colors.blue);
-//     Products = Products==1 ? Products:Products-1 ;
-//   } catch (e) {
-//     Get.snackbar("Error", "No information found for this email.",
-//           snackPosition: SnackPosition.BOTTOM);
-//   }
-// }
 
- // ignore: non_constant_identifier_names
- Future<void> UploadProductToFirestoreAndFirebase(BuildContext context)async{
-  await uploadProductImageTofirebase(context);
-  await uploadProductTofirebase(context);
- }
+  // ignore: non_constant_identifier_names
+  Future<void> UploadProductToFirestoreAndFirebase(BuildContext context) async {
+    await uploadProductImageTofirebase(context);
+    await uploadProductTofirebase(context);
+  }
+
   Future<void> uploadProductTofirebase(BuildContext context) async {
+    if (BrandName.text.isEmpty &&
+        BrandSize.text.isEmpty &&
+        BrandColor.text.isEmpty &&
+        BrandPrice.text.isEmpty) {
+      Get.snackbar("Error", "you should fill all the forms");
+    }
     productBrand = BrandName.text;
     productBrandSize = BrandSize.text;
     productBrandColor = BrandColor.text;
+    productPrice = BrandPrice.text;
     QuerySnapshot querySnapshot = await _firestore
         .collection("users")
         .where("Email", isEqualTo: emailText)
@@ -145,28 +135,35 @@ class ProfilePageController extends GetxController {
       isLoding = true;
       update();
       String UID = user!.uid;
-      // Update the user's document in Firestore with the new avatar URL
-      await _firestore.collection('users').doc(UID).update({
-        "product of user ${Products}": {
-          "productImage": productImage,
-          "productBrand": productBrand,
-          "productType": productType,
-          "productBrandSize": productBrandSize,
-          "productBrandColor": productBrandColor,
-          "first":first,
-          "productPrice": productPrice
-        }
-      });
-      
-      isLoding = false;
-      update();
-      Get.snackbar("Success", "Products added successfully",
-          colorText: Colors.blue);
-      Products += 1;
-      first +=1;
+      try {
+        String field = "product_of_user ";
+        await FirebaseFirestore.instance.collection('users').doc(UID).update({
+          '$field.$Products': {
+            "productImage": productImage,
+            "productBrand": productBrand,
+            "productType": productType,
+            "productBrandSize": productBrandSize,
+            "productBrandColor": productBrandColor,
+            "productPrice": productPrice,
+          }
+        }).then((_) async {
+          await QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Success',
+            text: 'Product added successfully!',
+          );
+          Products += 1;
+          isLoding = false;
+          update();
+        });
+      } catch (e) {
+        Get.snackbar("Error", "please try again later");
+        isLoding = false;
+        update();
+      }
     } else {
-      Get.snackbar("Error", "No information found for this email.",
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("Error", "data doesn't exist ,please try again later");
     }
   }
 
@@ -205,9 +202,8 @@ class ProfilePageController extends GetxController {
     productBrandSize = userData.productSize ?? '';
     productType = userData.productType ?? '';
     productBrandColor = userData.productBrandColor ?? '';
-    productPrice  = userData.prouctPrice ?? '';
+    productPrice = userData.prouctPrice ?? '';
   }
-
 
   Future<void> fetchselectedImage(String email) async {
     QuerySnapshot querySnapshot = await _firestore
@@ -261,21 +257,36 @@ class ProfilePageController extends GetxController {
   }
 
   Future<void> pickImageFromGallery(String type, BuildContext context) async {
-    type == "profile"
-        ? await _pickImage(ImageSource.gallery, context)
-        : _pickImageForProduct(ImageSource.gallery, context);
+    try {
+      type == "profile"
+          ? await _pickImage(ImageSource.gallery, context)
+          : _pickImageForProduct(ImageSource.gallery, context);
+    } catch (e) {
+      Get.snackbar("Error", "please try again.",
+          snackPosition: SnackPosition.TOP);
+    }
   }
 
   Future<void> pickImageFromCamera(BuildContext context) async {
-    await _pickImage(ImageSource.camera, context);
+    try {
+      await _pickImage(ImageSource.camera, context);
+    } catch (e) {
+      Get.snackbar("Error", "please try again",
+          snackPosition: SnackPosition.TOP);
+    }
   }
 
   Future<void> _pickImage(ImageSource source, BuildContext context) async {
-    final returnImage = await ImagePicker().pickImage(source: source);
-    if (returnImage == null) return;
-    Image = returnImage.path;
-    await uploadImageToStorageAndFirestore(context);
-    Get.back();
+    try {
+      final returnImage = await ImagePicker().pickImage(source: source);
+      if (returnImage == null) return;
+      Image = returnImage.path;
+      await uploadImageToStorageAndFirestore(context);
+      Get.back();
+    } catch (e) {
+      Get.snackbar("Error", "please try again.",
+          snackPosition: SnackPosition.TOP);
+    }
   }
 
   Future<void> _pickImageForProduct(
@@ -285,10 +296,11 @@ class ProfilePageController extends GetxController {
     productImage = returnImage.path;
     Get.back();
   }
+
   Future<void> uploadImageToStorageAndFirestore(BuildContext context) async {
     if (Image == null) {
       Get.snackbar("Error", "No image selected.",
-          snackPosition: SnackPosition.BOTTOM);
+          snackPosition: SnackPosition.TOP);
       return;
     }
 
@@ -299,7 +311,8 @@ class ProfilePageController extends GetxController {
         TaskSnapshot snapshot = await storageRef.putFile(File(Image!));
         downloadUrl = await snapshot.ref.getDownloadURL();
       } catch (e) {
-        Get.snackbar("Error", "Error uploading image ,please try again!",colorText: Colors.red);
+        Get.snackbar("Error", "Error uploading image ,please try again!",
+            colorText: Colors.red);
       }
 
       Image = downloadUrl; // Assign the download URL to selectedImage
@@ -313,10 +326,12 @@ class ProfilePageController extends GetxController {
         showConfirmBtn: false,
       );
     } catch (e) {
-      Get.snackbar("Error", "Error uploading image ,please try again!",colorText: Colors.red);
+      Get.snackbar("Error", "Error uploading image ,please try again!",
+          colorText: Colors.red);
     }
   }
-  Future<void> uploadProductImageTofirebase(BuildContext context)async {
+
+  Future<void> uploadProductImageTofirebase(BuildContext context) async {
     if (productImage == null) {
       Get.snackbar("Error", "No image selected.",
           snackPosition: SnackPosition.BOTTOM);
@@ -337,10 +352,10 @@ class ProfilePageController extends GetxController {
         showConfirmBtn: false,
       );
     } catch (e) {
-      Get.snackbar("Error", "Error uploading image ,please try again!",colorText: Colors.red);
+      Get.snackbar("Error", "Error uploading image ,please try again!",
+          colorText: Colors.red);
     }
   }
-  
 
   Future<void> updateUserAvatarInFirestore() async {
     QuerySnapshot querySnapshot = await _firestore
@@ -358,13 +373,14 @@ class ProfilePageController extends GetxController {
           .update({'avatar': Image}); // Save download URL to Firestore
     } else {
       Get.snackbar("Error", "No information found for this email.",
-          snackPosition: SnackPosition.BOTTOM);
+          snackPosition: SnackPosition.TOP);
     }
   }
 
   Future<void> removePictureOfProduct() async {
     if (productImage == null) {
-      Get.snackbar("Error", "there is no image to remove!",colorText: Colors.red);
+      Get.snackbar("Error", "there is no image to remove!",
+          colorText: Colors.red);
       return;
     }
     productImage = null;
@@ -382,15 +398,16 @@ class ProfilePageController extends GetxController {
       update();
     } else {
       Get.snackbar("Error", "No information found for this user.",
-          snackPosition: SnackPosition.TOP,colorText: Colors.red);
+          snackPosition: SnackPosition.TOP, colorText: Colors.red);
     }
     update();
   }
 
   Future<void> removePicture() async {
     if (Image == null) {
-      Get.snackbar("Error", "there is no image to remove!",colorText: Colors.red);
-      return; 
+      Get.snackbar("Error", "there is no image to remove!",
+          colorText: Colors.red);
+      return;
     }
     Image = null;
     QuerySnapshot querySnapshot = await _firestore
@@ -410,7 +427,8 @@ class ProfilePageController extends GetxController {
         Reference storageRef = FirebaseStorage.instance.refFromURL(Image!);
         storageRef.delete();
       } catch (e) {
-        Get.snackbar("Error", "can't remove image ,please try again!",colorText: Colors.red);
+        Get.snackbar("Error", "can't remove image ,please try again!",
+            colorText: Colors.red);
       }
     }
     update();

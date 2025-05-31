@@ -15,26 +15,25 @@ class profileOfProductUserController extends GetxController {
   Map<String, dynamic> isFollower = {};
   RxInt Followers = 0.obs;
   //String? EmailCurrentUser;
-  
 
-  void getEmail() async{
-       emailuser.value = await getEmailOfCurrentUser();
-       update();
-    }
+  void getEmail() async {
+    emailuser.value = await getEmailOfCurrentUser();
+    update();
+  }
 
   Future<String> getEmailOfCurrentUser() async {
-      String uid = user!.uid;
-      final snapshot = await _firestore.collection("users").doc(uid).get();
-      if (snapshot.exists) {
-        DocumentSnapshot<Map<String, dynamic>> DataUser =
-            await _firestore.collection('users').doc(uid).get();
-        emailuser.value = DataUser['Email'];
-        update();
-        return emailuser.value;
-        
-      }
+    String uid = user!.uid;
+    final snapshot = await _firestore.collection("users").doc(uid).get();
+    if (snapshot.exists) {
+      DocumentSnapshot<Map<String, dynamic>> DataUser =
+          await _firestore.collection('users').doc(uid).get();
+      emailuser.value = DataUser['Email'];
+      update();
       return emailuser.value;
+    }
+    return emailuser.value;
   }
+
   void isfollow() async {
     try {
       isFollowMap = {};
@@ -82,7 +81,8 @@ class profileOfProductUserController extends GetxController {
               Followers.value = isFollowMap![emailuser]
                   ? Followers.value + 1
                   : Followers.value - 1;
-              await doc.reference.update({"followers": Followers.value});
+              await doc.reference.update(
+                  {"followers": Followers.value < 0 ? 0 : Followers.value});
               update();
             }
           } else {
@@ -132,10 +132,8 @@ class profileOfProductUserController extends GetxController {
     }
   }
 
- 
-
   @override
-  void onInit() async{
+  void onInit() async {
     email = Get.arguments['email'];
     getEmail();
     GetNumberOfFollowers();

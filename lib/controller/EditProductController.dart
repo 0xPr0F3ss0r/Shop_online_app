@@ -6,19 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
-//import 'package:path/path.dart' as path;
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'dart:math';
-Random random = new Random();
+
 class EditProductController extends GetxController {
-  String? downloadUrl;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final User? user = FirebaseAuth.instance.currentUser;
-  TextEditingController BrandNameUpdate = TextEditingController();
-  TextEditingController BrandSizeUpdate = TextEditingController();
-  TextEditingController BrandColorUpdate = TextEditingController();
-  TextEditingController BrandPriceUpdate = TextEditingController();
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  // Text Controllers
+  final TextEditingController BrandNameUpdate = TextEditingController();
+  final TextEditingController BrandSizeUpdate = TextEditingController();
+  final TextEditingController BrandColorUpdate = TextEditingController();
+  final TextEditingController BrandPriceUpdate = TextEditingController();
+
   String? productPriceUpdate = '';
   String productTypeUpdate = "T-Cheart";
   String? productImageUpdate = '';
@@ -26,47 +26,10 @@ class EditProductController extends GetxController {
   String? productNameUpdate = '';
   String? productSizeUpdate = '';
   String? newproductImage = '';
+  String? ProductTypeUpdate = "";
+  String? ProductImageUpdate = "";
+  String? productIDUpdate = "";
   bool isLoding = false;
-  Future<void> UpdateProductToFirestoreAndFirebase(BuildContext context) async {
-    await UpdateProductTofirebase(context);
-  }
-
-  @override
-  void onClose() {
-    BrandNameUpdate.clear();
-    BrandSizeUpdate.clear();
-    BrandColorUpdate.clear();
-    BrandPriceUpdate.clear();
-    productTypeUpdate = "T-Cheart";
-    productImageUpdate = '';
-    update();
-    super.onClose();
-  }
-
-  @override
-  void onInit() {
-    productImageUpdate = '';
-    productColorUpdate = '';
-    productNameUpdate = '';
-    productSizeUpdate = '';
-    productPriceUpdate = '';
-    super.onInit();
-  }
-
-  void changeValueDropDown(String value) {
-    productTypeUpdate = value;
-    update();
-  }
-
-  void getValues(String productName, String productPrice, String productSize,
-      String productType, String productImage, String productColor) {
-    productNameUpdate = productName;
-    productPriceUpdate = productPrice;
-    productSizeUpdate = productSize;
-    productTypeUpdate = productType;
-    productImageUpdate = productImage;
-    productColorUpdate = productColor;
-  }
 
   void onclear() {
     // Dispose controllers when not needed
@@ -78,107 +41,161 @@ class EditProductController extends GetxController {
     update();
   }
 
-  Future<void> pickImageFromGallery(String type, BuildContext context) async {
-    _pickImageForProduct(ImageSource.gallery, context);
+  void changeValueDropDown(String value) {
+    productTypeUpdate =
+        value; // Make sure this is declared as a variable in your controller
+    update(); // Triggers UI rebuild
   }
 
-  Future<void> pickImageFromCamera(BuildContext context) async {
-    await _pickImage(ImageSource.camera, context);
+  @override
+  void onClose() {
+    BrandNameUpdate.dispose();
+    BrandSizeUpdate.dispose();
+    BrandColorUpdate.dispose();
+    BrandPriceUpdate.dispose();
+    super.onClose();
   }
 
-  Future<void> _pickImage(ImageSource source, BuildContext context) async {
-    final returnImage = await ImagePicker().pickImage(source: source);
-    if (returnImage == null) return;
-    productImageUpdate = returnImage.path;
-    await UpdateProductImageToFirebaseStorage(context);
-    Get.back();
+  @override
+  void onInit() {
+    super.onInit();
+    resetFields();
   }
 
-  Future<void> _pickImageForProduct(
-      ImageSource source, BuildContext context) async {
-    final returnImage = await ImagePicker().pickImage(source: source);
-    if (returnImage == null) return;
-    productImageUpdate = returnImage.path;
-    await UpdateProductImageToFirebaseStorage(context);
-    Get.back();
+  void resetFields() {
+    productImageUpdate = null;
+    productColorUpdate = null;
+    productNameUpdate = null;
+    productSizeUpdate = null;
+    productPriceUpdate = null;
+    productTypeUpdate = "T-Cheart";
   }
 
-  Future<void> UpdateProductImageToFirebaseStorage(BuildContext context) async {
-    if (productImageUpdate == null) {
-      Get.snackbar("Error", "No image selected.",
-          snackPosition: SnackPosition.BOTTOM);
+  void setProductDetails(
+      {required String name,
+      required String price,
+      required String size,
+      required String type,
+      required String image,
+      required String color,
+      required String productID}) {
+    productNameUpdate = name;
+    productPriceUpdate = price;
+    productSizeUpdate = size;
+    productTypeUpdate = type;
+    productImageUpdate = image;
+    productColorUpdate = color;
+    productIDUpdate = productID;
+    update();
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await ImagePicker().pickImage(source: source);
+      if (pickedFile != null) {
+        productImageUpdate = pickedFile.path;
+        await uploadImageToFirebase();
+        update();
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to pick image: ${e.toString()}");
+    }
+  }
+
+  Future<String?> uploadImageToFirebase() async {
+    if (productImageUpdate == null) return null;
+
+    try {
+      final String productId = Uuid().v4();
+      final String userId = user?.uid ?? 'unknown';
+
+      final Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child("users/$userId/products/product_$productId.jpg");
+
+      await storageRef.putFile(File(productImageUpdate!));
+      return await storageRef.getDownloadURL();
+    } catch (e) {
+      Get.snackbar("Error", "Image upload failed: ${e.toString()}");
+      return null;
+    }
+  }
+
+  Future<void> updateProduct(BuildContext context) async {
+    if (user == null) {
+      Get.snackbar("Error", "User not logged in.");
       return;
     }
+
+    isLoding = true;
+    update();
+
     try {
-      
-      final String productID = Uuid().v4();
+      final userDoc =
+          FirebaseFirestore.instance.collection("users").doc(user!.uid);
+      final snapshot = await userDoc.get();
 
-  // Get the current user's ID
-      final String userID = FirebaseAuth.instance.currentUser!.uid;
-
-  // Define the storage reference with an organized file path
-      final Reference storageRef = FirebaseStorage.instance.ref().child(
-      "users/$userID/products/product_$productID.jpg");
-      TaskSnapshot snapshot =
-          await storageRef.putFile(File(productImageUpdate!));
-      downloadUrl = await snapshot.ref.getDownloadURL();
-      newproductImage = downloadUrl;
-      update();
-    } catch (e) {
-      Get.snackbar("Error", "Failed to update product.",
-          colorText: Colors.red, backgroundColor: Colors.black);
-    }
-  }
-
-  Future<void> UpdateProductTofirebase(context) async {
-    String uid = user!.uid;
-    try {
-      final DocumentReference userDoc =
-          await _firestore.collection("users").doc(uid);
-      final snapshot = await _firestore.collection("users").doc(uid).get();
+      // 1. Verify document exists
       if (!snapshot.exists) {
-        Get.snackbar("Error", "User not found , try again later",
-            colorText: Colors.red);
+        Get.snackbar("Error", "User document not found");
+        return;
       }
-      Map<String, dynamic>? UserData = snapshot.data() as Map<String, dynamic>;
-      UserData.forEach((key, value) async {
-        if (key.startsWith("product of user") &&
-            value is Map<String, dynamic>) {
-          String? productType = value['productType'] ?? '';
-          if (
-              productTypeUpdate == productType) {
-            productColorUpdate = BrandColorUpdate.text;
-            productNameUpdate = BrandNameUpdate.text;
-            productSizeUpdate = BrandSizeUpdate.text;
-            productPriceUpdate = BrandPriceUpdate.text;
-            isLoding = true;
-            await UpdateProductImageToFirebaseStorage(context);
-            await userDoc.update({
-              '$key.productBrand': productNameUpdate,
-              '$key.productImage': newproductImage,
-              '$key.productPrice': productPriceUpdate,
-              '$key.productType': productTypeUpdate,
-              '$key.productBrandColor': productColorUpdate,
-              '$key.productBrandSize': productSizeUpdate,
-            });
-            isLoding = false;
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.success,
-              text: "Product uploaded successfully!",
-              title: 'Success',
-              autoCloseDuration: const Duration(seconds: 5),
-              showConfirmBtn: false,
-            );
-          }
-        } else {
-          Get.snackbar("Error", "no product found for this user.",
-              colorText: Colors.red, backgroundColor: Colors.black);
+
+      // 2. Get data and verify structure
+      final userData = snapshot.data() as Map<String, dynamic>;
+
+      // Check if product_of_user exists (EXACT field name match)
+      if (!userData.containsKey('product_of_user ')) {
+        Get.snackbar("Error", "User has no products collection");
+        return;
+      }
+
+      // 3. Verify the product exists
+      final productOfUser =
+          userData['product_of_user '] as Map<String, dynamic>;
+      if (!productOfUser.containsKey(productIDUpdate)) {
+        Get.snackbar("Error", "Product not found");
+        return;
+      }
+
+      // 4. Perform update (using EXACT field name)
+      final String? newImageUrl = await uploadImageToFirebase();
+      String field = "product_of_user ";
+      await userDoc.update({
+        '$field.$productIDUpdate': {
+          // ← Consistent field name
+          'productBrand': BrandNameUpdate.text.isEmpty
+              ? productNameUpdate
+              : BrandNameUpdate.text,
+          'productImage': newImageUrl ?? productImageUpdate,
+          'productPrice': BrandPriceUpdate.text.isEmpty
+              ? productPriceUpdate
+              : BrandPriceUpdate.text,
+          'productType': productTypeUpdate,
+          'productBrandColor': BrandColorUpdate.text.isEmpty
+              ? productColorUpdate
+              : BrandColorUpdate.text,
+          'productBrandSize': BrandSizeUpdate.text.isEmpty
+              ? productSizeUpdate
+              : BrandSizeUpdate.text,
         }
       });
+      await QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        title: 'Success',
+        text: 'Product updated successfully!',
+      );
     } catch (e) {
-      Get.snackbar("Error", "please try again later.",
-          colorText: Colors.red, backgroundColor: Colors.black);
+      await QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: 'Something wrong happened. Please try again!',
+      );
+    } finally {
+      isLoding = false;
+      update();
     }
   }
 }
